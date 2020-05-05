@@ -1,0 +1,17 @@
+.cards {
+  min-height: 35px;
+  max-width: 400px;
+  background-color: darkcyan;
+  white-space: normal;
+  border-top: 5px;
+  /* border-right: 5px; */
+  border-bottom-right-radius: 5px;
+  margin: 0px 10px 10px 10px;
+  word-break: break-all;
+}
+.sender {
+  border-top: 5px;
+  border-left: 5px;
+  border-bottom-left-radius: 5px;
+  margin-left: 55%;
+}
