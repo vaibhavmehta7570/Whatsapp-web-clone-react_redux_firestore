@@ -1,0 +1,33 @@
+.sidebar{
+    position: fixed;
+    width: 400px;
+    top: 0;
+    left:0;
+    background-color:#dddddd;
+    height: 100%;
+    border:1px solid #f1e3cb;
+}
+.users{
+    background-color: white;
+    margin-top: 1px;
+    height:70px;
+    padding:5px;
+}
+.users:hover{
+    background-color: #dddddd;
+}
+.inline-block{
+    display:inline-block
+}
+.userName{
+    padding-left: 30px;
+}
+img{
+    height:40px;
+}
+.user_list{
+    overflow-y: scroll;
+}
+.logout-button{
+    border-radius: 100px;
+}

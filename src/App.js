@@ -1,12 +1,11 @@
 import React from 'react';
-import Home from './components/Home';
-import 'antd/dist/antd.css';
+import Chat from './components/Chat';
 import './App.css';
 
 function App() {
 	return (
 		<div className='App'>
-			<Home />
+			<Chat />
 		</div>
 	);
 }
