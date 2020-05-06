@@ -1,0 +1,1 @@
+export const FETCH_ALL_MESSAGES = "FETCH_ALL_MESSAGES";

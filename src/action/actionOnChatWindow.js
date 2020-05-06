@@ -1,4 +1,4 @@
-import { FETCH_ALL_MESSAGES } from "../constant";
+import { FETCH_ALL_MESSAGES } from "../constants";
 import firebase from "../services/firebase";
 
 export const fetchMessageSuccess = (messageArr) => ({
@@ -10,8 +10,8 @@ export const fetchMessages = (messages) => {
   var db = firebase.firestore();
   return async (dispatch) => {
     try {
-      db.collection("Message")
-        .doc("USER1id+USSER2id")
+      db.collection("messages")
+        .doc("user1user2")
         .collection("messages")
         .onSnapshot((doc) => {
           let mesageArray = [...messages];
@@ -52,8 +52,8 @@ export const onSendMessage = (messageBody, email) => {
   return async (dispatch) => {
     try {
       var docRef = db
-        .collection("Message")
-        .doc("USER1id+USSER2id")
+        .collection("messages")
+        .doc("user1user2")
         .collection("messages")
         .doc();
 

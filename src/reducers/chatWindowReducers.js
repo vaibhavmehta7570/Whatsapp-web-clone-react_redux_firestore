@@ -1,4 +1,4 @@
-import { FETCH_ALL_MESSAGES } from "../constant";
+import { FETCH_ALL_MESSAGES } from "../constants";
 
 const initialState = {
   message: [],

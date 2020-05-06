@@ -1,5 +1,5 @@
 import React from "react";
-import "../CSS/cards.css";
+import "../assets/style/cards.css";
 
 function SenderCard(props) {
   return (
