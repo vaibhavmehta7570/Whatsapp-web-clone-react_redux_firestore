@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
 .sidebar{
     position: fixed;
     width: 400px;
@@ -6,6 +7,7 @@
     background-color:#dddddd;
     height: 100%;
     border:1px solid #f1e3cb;
+    overflow-y: scroll;
 }
 .users{
     background-color: white;
@@ -25,9 +27,28 @@
 img{
     height:40px;
 }
-.user_list{
-    overflow-y: scroll;
+.search-icon{
+    height:20px;
 }
+
 .logout-button{
     border-radius: 100px;
 }
+.search{
+    width:90%;
+    padding:10px;
+    margin: 5px;
+}
+.initial-text{
+    margin-left:550px;   
+    margin-top: 200px;
+}
+h1,h3{
+    text-align: center;
+    font-family: 'Kaushan Script', cursive;
+}
+h1{
+
+}
+
+

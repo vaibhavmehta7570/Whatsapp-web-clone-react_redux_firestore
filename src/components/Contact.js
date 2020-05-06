@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import user_default from "../assets/images/users.svg";
 import "../assets/css/Chat.css";
 const Contact = props => {
