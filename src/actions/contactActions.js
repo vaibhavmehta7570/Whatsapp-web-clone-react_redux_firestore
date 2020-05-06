@@ -1,7 +1,7 @@
-import {SET_USERS} from "../constants";
-export const setUsers=(data)=>{
+import {GET_USERS} from "../constants";
+export const getUsers=(data)=>{
     return {
-        type:SET_USERS,
+        type:GET_USERS,
         data,
     };
 };

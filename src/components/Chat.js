@@ -6,14 +6,14 @@ import Contact from "./Contact";
 import user_default from "../assets/images/users.svg";
 import TextBox from "./TextBox"
 import search from "../assets/images/search.svg"
-import {setUsers} from "../reducers/index";
+import {getUsers,searchContacts} from "../reducers/index";
 class Chat extends Component{
-    state={
-        // users:null,
-        search:"",
-        searchEnable:false,
-        searchedValue:[]
-    }   
+    constructor (props){
+        super(props);
+        this.state={
+            searchString:"",
+        }   
+    }
     componentDidMount(){
         db.collection("users")
             .get()
@@ -24,18 +24,34 @@ class Chat extends Component{
                     users.push(data);
                 })
                 // this.setState({users:users})
-                this.props.setUsers(users);
+                this.props.getUsers(users);
             })
             .catch(error=>console.log(error))
     }
-    // onchange = e =>{
-    //         let search=e.taget.value
-    //         this.setState((state)=>({
-    //             searchedValue: state.users.filter((user)=>{
-    //                 return (user.username.includes(search))
-    //             })
-    //         }))   
-    // }
+    handelOnInputChange=(event)=>{
+        let {users}=this.props
+        const searchString=event.target.value;
+        console.log(searchString);
+        this.setState({ searchString:searchString },()=>{
+            if(this.state.searchString === ""){
+                db.collection("users")
+            .get()
+            .then(snapshot=>{
+                const users =[]
+                snapshot.forEach(doc=>{
+                    const data=doc.data();
+                    users.push(data);
+                })
+                // this.setState({users:users})
+                this.props.getUsers(users);
+            })
+            .catch(error=>console.log(error))
+            }
+            let foundusers=users.filter(user=>user.username.toLowerCase().includes(this.state.searchString.toLowerCase()))
+            this.props.searchContacts(foundusers);
+            // console.log(foundusers);
+        })
+    }
 
     render(){
         console.log(this.state.searchedValue);
@@ -47,12 +63,12 @@ class Chat extends Component{
                     <button type="button" className="logout-button btn btn-primary float-right mr-3">Logout</button>
                 </div>
                 <div className="flex mb-2">
-                    <input type="text" placeholder="Search.." className="search" onChange={this.onchange} />
+                    <input type="text" placeholder="Search.." className="search" onChange={this.handelOnInputChange} />
                     <img src={search} alt="search" className="search-icon"/>
                 </div>
                 <div className="user_list">
                 {
-                    this.props.users&&this.props.users.map(user=>{
+                    this.props.users ? this.props.users.map(user=>{
                         return (
                             
                                         <Contact
@@ -61,32 +77,7 @@ class Chat extends Component{
                                         />
                                     
                                 )
-                    })
-
-                    //     (this.state.searchEnable===false)? this.state.users && this.state.users.map(user =>{
-                    //     return (
-                            
-                    //             <Contact
-                    //                 key={user.email_id}
-                    //                 users={user}
-                    //             />
-                            
-                    //     )
-                    // }) :
-                    // this.state.searchedValue && this.state.searchedValue.map(user =>{
-                    //     console.log(this.state.searchedValue);
-                    //     return (
-                        
-                    //             <Contact
-                    //                 key={user.email_id}
-                    //                 users={user}
-                    //             />
-                            
-                            
-                    //     )
-                    // })
-
-                
+                    }): null
                 }
                 </div>
                 
@@ -103,12 +94,13 @@ class Chat extends Component{
 }
 const mapStateToProps=(state)=>{
     return {
-        users:state.user
+        users:state.users
     };
 };
 const mapDispatchToProps=(dispatch)=>{
     return{
-        setUsers:(data)=>dispatch(setUsers(data))
+        getUsers:(data)=>dispatch(getUsers(data)),
+        searchContacts:(data)=>dispatch(searchContacts(data))
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);

@@ -1,7 +1,10 @@
-import {SET_USERS} from "../constants";
+import {GET_USERS} from "../constants";
+import {SEARCH_CONTACTS} from "../constants";
 const contactReducer = (state=[],action)=>{
     switch(action.type){
-        case SET_USERS:
+        case GET_USERS:
+            return action.data;
+        case SEARCH_CONTACTS:
             return action.data;
         default:
             return state;
