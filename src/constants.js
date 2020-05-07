@@ -1,3 +1,2 @@
-export const FETCH_USERS = 'FETCH_USERS';
-
-export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
+export const GET_USERS='GET_USERS';
+export const SEARCH_CONTACTS="SEARCH_CONTACTS";

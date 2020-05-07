@@ -1,0 +1,18 @@
+.text-box{
+    margin-left:400px;
+    position: fixed;
+    bottom: 0;
+    height:70px;
+    background-color: #dddddd;
+    width: 100%;
+}
+.input{
+    width: 750px;
+   margin-left: 50px;
+}
+.inline-block{
+    display:inline-block;
+}
+.send{
+    height:30px;
+}

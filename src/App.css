@@ -1,3 +1,7 @@
+.app{
+    background-image: url("/back.png");
+    background-size: cover;
+}
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap&family=Kalam:wght@700&display=swap');
 
 .title-english {
