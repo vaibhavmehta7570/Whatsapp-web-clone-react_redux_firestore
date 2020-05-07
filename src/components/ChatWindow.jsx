@@ -18,6 +18,7 @@ class ChatWindow extends Component {
 	}
 	componentDidMount() {
 		this.props.fetchMessages(this.props.message);
+		
 	}
 	handleOnchange = e => {
 		this.setState({ [e.target.name]: e.target.value });
@@ -25,6 +26,7 @@ class ChatWindow extends Component {
 	chageInputValueAfterSend = () => {
 		this.setState({ message_body: '' });
 	};
+	
 
 	render() {
 		return (
@@ -65,17 +67,21 @@ class ChatWindow extends Component {
 						</div>
 						<div className='message-area'>
 							{this.props.message.map(message =>
+								
 								message.sender_id !== this.state.email ? (
+									
 									<ReceiverCard
 										key={message.message_id}
 										message={message.message_body}
 										message_id={message.message_id}
+										message_time={message.timestamp}
 									/>
 								) : (
 									<SenderCard
 										key={message.message_id}
 										message={message.message_body}
 										message_id={message.message_id}
+										message_time={message.timestamp}
 									/>
 								)
 							)}
