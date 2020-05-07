@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import logo from '../assets/images/logo.svg';
+import Navbar from './Navbar';
+import '../assets/styles/Home.css';
 
 export default class Home extends Component {
 	render() {
 		return (
 			<div>
+				<Navbar />
 				<div className='container'>
 					<div className='row'>
 						<div className='col-8'>
@@ -16,7 +19,7 @@ export default class Home extends Component {
 							</div>
 						</div>
 						<div className='col-4'>
-							<img src={logo} alt='logo' width='400px' />
+							<img src={logo} alt='logo' className='main-logo' />
 						</div>
 					</div>
 					<footer className='footer'>

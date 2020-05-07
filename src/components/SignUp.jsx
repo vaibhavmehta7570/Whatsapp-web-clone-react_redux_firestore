@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../services/firebase';
+import Navbar from './Navbar';
 
 class SignUp extends Component {
 	state = {
@@ -37,6 +38,7 @@ class SignUp extends Component {
 					usersRef
 						.doc(res.user.uid)
 						.set({
+							uid: res.user.uid,
 							firstname,
 							lastname,
 							username: `${firstname} ${lastname}`,
@@ -107,6 +109,7 @@ class SignUp extends Component {
 
 		return (
 			<>
+				<Navbar />
 				{alert && (
 					<div className={`alert alert-${alertType} text-center`} role='alert'>
 						{alertMessage}
