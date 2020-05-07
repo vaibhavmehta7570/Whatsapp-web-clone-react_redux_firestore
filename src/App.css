@@ -2,3 +2,58 @@
     background-image: url("/back.png");
     background-size: cover;
 }
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap&family=Kalam:wght@700&display=swap');
+
+.title-english {
+	font-family: 'Caveat', cursive;
+	font-size: 3rem;
+	margin-bottom: 2rem;
+}
+
+.title-hindi {
+	font-family: 'Kalam', cursive;
+	font-size: 2rem;
+}
+
+.row {
+	background: #fff;
+	padding: 24px;
+	height: 550px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+}
+
+.footer {
+	text-align: end;
+	font-size: 1.1rem;
+}
+
+.fa-react {
+	font-size: 1.7rem;
+}
+
+.blue {
+	color: #2196f3;
+}
+
+.pink {
+	color: palevioletred;
+}
+
+.sign-up-form {
+	width: 30rem;
+}
+
+.login-form {
+	width: 30rem;
+	margin: 2rem;
+}
+
+.form-container {
+	display: flex;
+}
+
+.nav-link.active {
+	border-bottom: 5px solid #2196f3;
+}
