@@ -1,22 +1,74 @@
-.username {
-  height: 80px;
-  width: 500px;
-  margin-top: 10px;
-  background-color: rgba(100, 100, 100, 0.3);
-  color: black;
+.chat-side-bar {
+  background-color: grey;
+  height: 100vh;
 }
-.chat-room {
-  height: 480px;
-  width: 500px;
-  background-color: rgba(179, 190, 181, 0.356);
+.chat-window {
+  /* background-color: aqua; */
+  height: 100vh;
+  padding: 0px 0px;
+  overflow-y: hidden;
+}
+.navbar {
+  background-color: #ededed;
+}
+.message-area {
+  height: 81vh;
+  overflow-y: scroll;
+  /* overflow-x: hidden; */
+}
+.footer-bar {
+  height: 65px;
+  background-color: #e5ddd5;
+}
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 14px;
+}
+.footer-icon {
+  font-size: 25px;
+  background-color: transparent;
+  border: none;
+  color: #919191;
+}
+.message-box {
+  width: 87%;
+}
+.message-area {
+  background-image: url("../images/wtp.png");
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
 }
-.message-card {
-  height: 470px;
-  width: 500px;
-  background-color: rgb(248, 203, 203);
-  overflow-y: scroll;
+.footer-icon:focus {
+  outline: none;
+}
+.form-control {
+  border-radius: 20px;
+}
+.form-control:focus {
+  border: none;
+  border-color: transparent;
+  box-shadow: none !important;
+  outline: none;
+}
+.user-image {
+  border-radius: 20px;
+}
+.username-image {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.user-name {
+  width: 38rem;
+  font-size: 20px;
+}
+.header-icon {
+  font-size: 22px;
+  background-color: transparent;
+  border: none;
+  color: #919191;
+}
+.header-icon:focus {
+  outline: none;
 }

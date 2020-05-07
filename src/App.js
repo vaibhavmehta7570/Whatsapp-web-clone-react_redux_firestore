@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Form from "./components/Form";
 import ChatWindow from "./components/ChatWindow";
 import firebase from "./services/firebase";
+import "bootstrap/dist/css/bootstrap.css";
 
 class App extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class App extends Component {
     return (
       <div className="home">
         {this.state.showForm ? (
-          <Form
+          <Form //just done for demo purpose
             OnchangeEvent={this.handleOnchange}
             onSubmitEmail={this.submitEmail}
           />
