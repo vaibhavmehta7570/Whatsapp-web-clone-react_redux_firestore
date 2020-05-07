@@ -7,6 +7,8 @@ import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
 import firebase from './services/firebase';
 
+import ChatWindow from "./components/ChatWindow";
+
 class App extends Component {
 	// TODO: move this to appropriate component
 	componentDidMount() {
@@ -39,6 +41,11 @@ class App extends Component {
 					<Route path='/signup' component={SignUp} />
 					<Route path='/login' component={LogIn} />
 					<Route path='/chat' component={Chat} />
+					<Route path='/chatWindow'>
+           <ChatWindow
+                username={this.state.inputEmail}
+              />
+          </Route>
 				</div>
 			</BrowserRouter>
 		);
