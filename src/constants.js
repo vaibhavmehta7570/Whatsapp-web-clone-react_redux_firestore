@@ -1,2 +1,1 @@
-export const GET_USERS='GET_USERS';
-export const SEARCH_CONTACTS="SEARCH_CONTACTS";
+export const GET_USERS = 'GET_USERS';

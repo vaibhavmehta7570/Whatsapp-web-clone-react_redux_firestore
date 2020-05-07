@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import Chat from './components/Chat';
 import Home from './components/Home';
 import { BrowserRouter, Route } from 'react-router-dom';
-import './App.css';
 
-
-import Navbar from './components/Navbar';
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
 import firebase from './services/firebase';
@@ -21,7 +18,7 @@ class App extends Component {
 				usersRef.onSnapshot(
 					users => {
 						users.forEach(user => {
-							console.log(user.data());
+							// console.log(user.data());
 						});
 					},
 					err => {
@@ -37,12 +34,11 @@ class App extends Component {
 	render() {
 		return (
 			<BrowserRouter>
-				<div className='App'>
-					<Navbar />
+				<div>
 					<Route exact path='/' component={Home} />
 					<Route path='/signup' component={SignUp} />
 					<Route path='/login' component={LogIn} />
-          <Route path='/chat' component={Chat} />
+					<Route path='/chat' component={Chat} />
 				</div>
 			</BrowserRouter>
 		);

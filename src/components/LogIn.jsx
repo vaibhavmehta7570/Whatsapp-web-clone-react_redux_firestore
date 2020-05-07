@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from '../services/firebase';
 import googleLogo from '../assets/images/google_logo.svg';
+import Navbar from './Navbar';
 
 class LogIn extends Component {
 	state = {
@@ -83,6 +84,7 @@ class LogIn extends Component {
 					usersRef
 						.doc(result.user.uid)
 						.set({
+							uid: result.user.uid,
 							firstname,
 							lastname,
 							username: `${firstname} ${lastname}`,
@@ -149,6 +151,7 @@ class LogIn extends Component {
 
 		return (
 			<>
+				<Navbar />
 				{alert && (
 					<div className={`alert alert-${alertType} text-center`} role='alert'>
 						{alertMessage}
