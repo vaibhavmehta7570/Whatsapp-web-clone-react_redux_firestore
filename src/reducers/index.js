@@ -1,6 +1,8 @@
+import { combineReducers } from 'redux';
 import chatWindowReducer from "./chatWindowReducers";
-import { combineReducers } from "redux";
-
-export default combineReducers({
+import contactReducer from './contactReducer';
+const rootReducer = combineReducers({
+	users: contactReducer,
   chats: chatWindowReducer,
 });
+export default rootReducer;

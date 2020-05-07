@@ -1,1 +1,2 @@
 export const FETCH_ALL_MESSAGES = "FETCH_ALL_MESSAGES";
+export const GET_USERS = 'GET_USERS';

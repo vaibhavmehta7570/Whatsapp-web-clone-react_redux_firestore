@@ -1,48 +1,55 @@
-import React, { Component } from "react";
-import Form from "./components/Form";
+import React, { Component } from 'react';
+import Chat from './components/Chat';
+import Home from './components/Home';
+import { BrowserRouter, Route } from 'react-router-dom';
+
+import SignUp from './components/SignUp';
+import LogIn from './components/LogIn';
+import firebase from './services/firebase';
+
 import ChatWindow from "./components/ChatWindow";
-import firebase from "./services/firebase";
-import "bootstrap/dist/css/bootstrap.css";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.db = firebase.firestore();
-    this.state = {
-      email: "",
-      inputEmail: "",
-      showForm: true,
-      chat: "",
-      inputMessage: "",
-    };
-  }
-  handleOnchange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-  submitEmail = () => {
-    this.setState({ inputEmail: this.state.email, showForm: false });
-  };
+	// TODO: move this to appropriate component
+	componentDidMount() {
+		const firestore = firebase.firestore();
+		const usersRef = firestore.collection('users');
 
-  render() {
-    return (
-      <div className="home">
-        {this.state.showForm ? (
-          <Form //just done for demo purpose
-            OnchangeEvent={this.handleOnchange}
-            onSubmitEmail={this.submitEmail}
-          />
-        ) : (
-          <ChatWindow
-            username={this.state.inputEmail}
-            OnChangeEvent={this.handleOnchange}
-            onSendMessage={this.sendMessage}
-            messageBody={this.state.chat}
-            email={this.state.inputEmail}
-          />
-        )}
-      </div>
-    );
-  }
+		firebase.auth().onAuthStateChanged(user => {
+			if (user) {
+				usersRef.onSnapshot(
+					users => {
+						users.forEach(user => {
+							// console.log(user.data());
+						});
+					},
+					err => {
+						console.error(`Looks like an error => ${err.message}`);
+					}
+				);
+			} else {
+				console.log('User is not logged in');
+			}
+		});
+	}
+
+	render() {
+		return (
+			<BrowserRouter>
+				<div>
+					<Route exact path='/' component={Home} />
+					<Route path='/signup' component={SignUp} />
+					<Route path='/login' component={LogIn} />
+					<Route path='/chat' component={Chat} />
+					<Route path='/chatWindow'>
+           <ChatWindow
+                username={this.state.inputEmail}
+              />
+          </Route>
+				</div>
+			</BrowserRouter>
+		);
+	}
 }
 
 export default App;
