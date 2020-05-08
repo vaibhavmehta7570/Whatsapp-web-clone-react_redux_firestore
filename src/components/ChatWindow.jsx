@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
-import '../assets/styles/chatWindow.css';
-import ReceiverCard from './ReceiverCards';
-import SenderCard from './SenderCard';
-import { fetchMessages, onSendMessage } from '../actions/actionOnChatWindow';
-import { connect } from 'react-redux';
-import avtarImag from '../assets/images/avtarImag.jpg';
+
+import React, { Component } from "react";
+import "../assets/styles/chatWindow.css";
+import ReceiverCard from "./ReceiverCards";
+import SenderCard from "./SenderCard";
+import { fetchMessages, onSendMessage } from "../actions/actionOnChatWindow";
+import { connect } from "react-redux";
+import avtarImag from "../assets/images/avtarImag.jpg";
+
 class ChatWindow extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +44,9 @@ class ChatWindow extends Component {
                   />
                 </div>
                 <div className="user-name mt-1">
-                  {this.props.userDetails.username}
+                  <p style={{ textAlign: "left" }}>
+                    {this.props.userDetails.username}
+                  </p>
                 </div>
               </div>
               <div className="searchbar-icon">
@@ -69,23 +73,31 @@ class ChatWindow extends Component {
                 <ReceiverCard
                   key={message.message_id}
                   message={message.message_body}
-				  message_id={message.message_id}
-				  message_time={message.timestamp}
-				  username={this.props.userDetails.username}
-				  
+                  message_id={message.message_id}
+                  message_time={message.timestamp}
+                  username={this.props.userDetails.username}
                 />
               ) : (
                 <SenderCard
                   key={message.message_id}
                   message={message.message_body}
-				  message_id={message.message_id}
-				  message_time={message.timestamp}
+                  message_id={message.message_id}
+                  message_time={message.timestamp}
                 />
               )
             )}
           </div>
           <div className="footer-bar">
             <footer claassname="footer-bar">
+            <form onSubmit={(event) => {
+              event.preventDefault()
+                this.props.onSendMessage(
+                  this.state.message_body,
+                  this.state.email,
+                  this.props.newChatDocRef
+                );
+                this.chageInputValueAfterSend();
+              }} >
               <div className="footer-content">
                 <div className="emoji-icon">
                   <button className="footer-icon">
@@ -106,14 +118,7 @@ class ChatWindow extends Component {
                   <div className="send-icon">
                     <button
                       className="footer-icon"
-                      onClick={() => {
-                        this.props.onSendMessage(
-                          this.state.message_body,
-                          this.state.email,
-                          this.props.newChatDocRef
-                        );
-                        this.chageInputValueAfterSend();
-                      }}
+                      type="submit"
                     >
                       <i className="fa fa-send-o"></i>
                     </button>
@@ -126,6 +131,7 @@ class ChatWindow extends Component {
                   </div>
                 )}
               </div>
+                </form>
             </footer>
           </div>
         </div>

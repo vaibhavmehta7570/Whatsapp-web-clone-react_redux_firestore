@@ -27,11 +27,6 @@ export default class Navbar extends Component {
 										Sign Up
 									</NavLink>
 								</li>
-								<li className='nav-item'>
-									<NavLink className='nav-link' to='/chat'>
-										Chat Screen
-									</NavLink>
-								</li>
 							</ul>
 						</div>
 					</div>
