@@ -8,7 +8,7 @@ function messageTime(timestamp){
         hours = hours < 10 ? "0" + hours : hours;
         var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
 		var time = hours + ":" + minutes + " " + am_pm;
-		return <p> {time} </p>
+		return <p className="receiver-time"> {time} </p>
 	}
 function ReceiverCard(props) {
 	return (
@@ -17,7 +17,8 @@ function ReceiverCard(props) {
 				<img src={traingle} height='15px' width='25px' alt='cone' />
 			</span>
 			<div className='inner-parent receiver'>
-				<p style={{ padding: '5px 20px 5px 5px' }}>{props.message}</p>
+				<p className="username">~{props.username}</p>
+				<p className="receive-msg">{props.message}</p>
 				{messageTime(props.message_time)}
 			</div>
 		</div>

@@ -8,9 +8,9 @@ import search from "../assets/images/search.svg";
 import { getUsers } from "../actions/contactActions";
 import { Link } from "react-router-dom";
 import ChatWindow from "./ChatWindow";
-import { fetchMessages } from '../actions/actionOnChatWindow'
-import { getCurrentUser } from '../actions/currentUserActions'
-import { userLoggedIn } from '../actions/authActions'
+import { fetchMessages } from "../actions/actionOnChatWindow";
+import { getCurrentUser } from "../actions/currentUserActions";
+import { userLoggedIn } from "../actions/authActions";
 
 class Chat extends Component {
   constructor(props) {
@@ -20,34 +20,34 @@ class Chat extends Component {
       searchedUsers: null,
       userToChatWith: null,
       showChatRoom: false,
-      newChatDocRef: null
+      newChatDocRef: null,
     };
   }
 
   componentDidMount() {
-    this.checkAuthenticationState()
+    this.checkAuthenticationState();
   }
 
   checkAuthenticationState = () => {
-    auth.onAuthStateChanged(user => {
-			if (user) {
-        db.collection('users')
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        db.collection("users")
           .doc(user.uid)
           .onSnapshot(
-            user => {
-                this.props.getCurrentUser(user.data())
-                this.getAllUsers()
+            (user) => {
+              this.props.getCurrentUser(user.data());
+              this.getAllUsers();
             },
-            err => {
+            (err) => {
               console.error(`Looks like an error => ${err.message}`);
             }
           );
-			} else {
-        console.log('User is not logged in');
-        this.props.getCurrentUser({})
-			}
-		});
-  }
+      } else {
+        console.log("User is not logged in");
+        this.props.getCurrentUser({});
+      }
+    });
+  };
 
   getAllUsers = () => {
     db.collection("users")
@@ -56,14 +56,14 @@ class Chat extends Component {
         const users = [];
         snapshot.forEach((doc) => {
           const data = doc.data();
-          if ( data.user_id !== this.props.currentUser.user_id) {
+          if (data.user_id !== this.props.currentUser.user_id) {
             users.push(data);
           }
         });
         this.props.getUsers(users);
       })
       .catch((error) => console.log(error));
-  }
+  };
 
   // Search functionality in search contacts
   handelOnInputChange = (event) => {
@@ -79,34 +79,38 @@ class Chat extends Component {
   };
 
   handleSignOut = () => {
-		auth
-			.signOut()
-			.then(() => {
-        console.log('Sign Out successful');
-        this.props.userLoggedIn(null)
-			})
-			.catch(err => {
-				console.log('Sign Out failed', err);
-			});
-	};
-  
+    auth
+      .signOut()
+      .then(() => {
+        console.log("Sign Out successful");
+        this.props.userLoggedIn(null);
+      })
+      .catch((err) => {
+        console.log("Sign Out failed", err);
+      });
+  };
+
   openChatRoom = (user) => {
     // console.log('LoggedIn User: ' , this.props.currentUser, 'Chatting with User: ', user)
     const chatID = this.createUniqueChatID(this.props.currentUser, user);
-    console.log(chatID)
-    const newChat = db.collection('chats').doc(chatID);
-    this.setState({ userToChatWith: user, showChatRoom: true, newChatDocRef: newChat});
-    this.props.fetchMessages(this.props.message, newChat)
-
+    const newChat = db.collection("chats").doc(chatID);
+    this.setState({
+      userToChatWith: user,
+      showChatRoom: true,
+      newChatDocRef: newChat,
+    });
+    this.props.fetchMessages([], newChat);
   };
 
   createUniqueChatID = (loggedInUser, chatWithUser) => {
-    if(loggedInUser.user_id.toLowerCase() < chatWithUser.user_id.toLowerCase()) {
+    if (
+      loggedInUser.user_id.toLowerCase() < chatWithUser.user_id.toLowerCase()
+    ) {
       return loggedInUser.user_id + chatWithUser.user_id;
     } else {
       return chatWithUser.user_id + loggedInUser.user_id;
     }
-  }
+  };
 
   render() {
     return (
@@ -190,15 +194,16 @@ const mapStateToProps = (state) => {
   return {
     users: state.users,
     currentUser: state.currentUser,
-    message: state.chats.message
+    message: state.chats.message,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     getUsers: (data) => dispatch(getUsers(data)),
     getCurrentUser: (data) => dispatch(getCurrentUser(data)),
-    userLoggedIn: data => dispatch(userLoggedIn(data)),
-    fetchMessages: (message, docRef) => dispatch(fetchMessages(message, docRef))
+    userLoggedIn: (data) => dispatch(userLoggedIn(data)),
+    fetchMessages: (message, docRef) =>
+      dispatch(fetchMessages(message, docRef)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);

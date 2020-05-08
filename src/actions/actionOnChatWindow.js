@@ -10,29 +10,27 @@ export const fetchMessages = (messages, chatDocRef) => {
   // var db = firebase.firestore();
   return async (dispatch) => {
     try {
-      chatDocRef
-        .collection("messages")
-        .onSnapshot((doc) => {
-          let mesageArray = [...messages];
-          if (messages.length > 0) {
-            let maxTimestamp = 0;
-            let newMsgObject;
-            doc.forEach((currentObj) => {
-              if (currentObj.data().timestamp > maxTimestamp) {
-                maxTimestamp = currentObj.data().timestamp;
-                newMsgObject = currentObj.data();
-              }
-            });
-            mesageArray.push(newMsgObject);
-            dispatch(fetchMessageSuccess(mesageArray));
-          } else {
-            doc.forEach((message) => {
-              mesageArray.push(message.data());
-            });
-            const sortedMessage = sortMessages(mesageArray);
-            dispatch(fetchMessageSuccess(sortedMessage));
-          }
-        });
+      chatDocRef.collection("messages").onSnapshot((doc) => {
+        let mesageArray = [...messages];
+        if (messages.length > 0) {
+          let maxTimestamp = 0;
+          let newMsgObject;
+          doc.forEach((currentObj) => {
+            if (currentObj.data().timestamp > maxTimestamp) {
+              maxTimestamp = currentObj.data().timestamp;
+              newMsgObject = currentObj.data();
+            }
+          });
+          mesageArray.push(newMsgObject);
+          dispatch(fetchMessageSuccess(mesageArray));
+        } else {
+          doc.forEach((message) => {
+            mesageArray.push(message.data());
+          });
+          const sortedMessage = sortMessages(mesageArray);
+          dispatch(fetchMessageSuccess(sortedMessage));
+        }
+      });
     } catch (error) {
       console.log(error.message);
     }
@@ -49,9 +47,7 @@ export const sortMessages = (messageArr) => {
 export const onSendMessage = (messageBody, email, chatDocRef) => {
   return (dispatch) => {
     try {
-      var docRef = chatDocRef
-        .collection("messages")
-        .doc();
+      var docRef = chatDocRef.collection("messages").doc();
 
       docRef.set({
         message_body: messageBody,

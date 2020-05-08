@@ -14,10 +14,9 @@ class ChatWindow extends Component {
       email: this.props.currentUser.email,
     };
   }
-  // componentDidMount() {
-  //   console.log('mounted')
-  //   this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
-  // }
+  componentDidMount() {
+    this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
+  }
   handleOnchange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -26,6 +25,7 @@ class ChatWindow extends Component {
   };
 
   render() {
+	  console.log("current user name is"+ this.props.userDetails.username);
     return (
       <React.Fragment>
         <div className="col-md-8 chat-window">
@@ -64,12 +64,15 @@ class ChatWindow extends Component {
           </div>
           <div className="message-area">
             {this.props.message.map((message) =>
+              message !== undefined &&
               message.sender_id !== this.state.email ? (
                 <ReceiverCard
                   key={message.message_id}
                   message={message.message_body}
 				  message_id={message.message_id}
 				  message_time={message.timestamp}
+				  username={this.props.userDetails.username}
+				  
                 />
               ) : (
                 <SenderCard

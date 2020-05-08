@@ -8,7 +8,7 @@ function messageTime(timestamp){
 	hours = hours < 10 ? "0" + hours : hours;
 	var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
 	var time = hours + ":" + minutes + " " + am_pm;
-	return <p> {time} </p>
+	return <p className="sender-time"> {time} </p>
 }
 function SenderCard(props) {
 	return (
@@ -16,11 +16,13 @@ function SenderCard(props) {
 			className='cards card-sender mt-2'
 			style={{ backgroundColor: 'transparent' }}>
 			<div className='inner-parent sender'>
-				<p style={{ padding: '5px 20px 5px 5px' }}>{props.message}</p>
+				<p className="sender_username">~You</p>
+				<p className="sender-msg"style={{}}>{props.message}</p>
+				{messageTime(props.message_time)}
 			</div>
 			<span className='sen'>
 				<img src={traingle} height='17px' width='15px' alt='cone' />
-				{messageTime(props.message_time)}
+				
 			</span>
 		</div>
 	);

@@ -62,6 +62,7 @@
 .user-name {
   width: 38rem;
   font-size: 20px;
+  text-align: left;
 }
 .header-icon {
   font-size: 22px;
