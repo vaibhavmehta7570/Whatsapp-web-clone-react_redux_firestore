@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import "../assets/styles/chatWindow.css";
 import ReceiverCard from "./ReceiverCards";
@@ -26,6 +27,7 @@ class ChatWindow extends Component {
   };
 
   render() {
+	  console.log("current user name is"+ this.props.userDetails.username);
     return (
       <React.Fragment>
         <div className="col-md-8 chat-window">
@@ -72,12 +74,15 @@ class ChatWindow extends Component {
                   key={message.message_id}
                   message={message.message_body}
                   message_id={message.message_id}
+                  message_time={message.timestamp}
+                  username={this.props.userDetails.username}
                 />
               ) : (
                 <SenderCard
                   key={message.message_id}
                   message={message.message_body}
                   message_id={message.message_id}
+                  message_time={message.timestamp}
                 />
               )
             )}
@@ -114,7 +119,6 @@ class ChatWindow extends Component {
                     <button
                       className="footer-icon"
                       type="submit"
-                      // onClick={}
                     >
                       <i className="fa fa-send-o"></i>
                     </button>
