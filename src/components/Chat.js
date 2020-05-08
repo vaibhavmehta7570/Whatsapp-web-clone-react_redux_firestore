@@ -90,7 +90,8 @@ class Chat extends Component {
       });
   };
 
-  openChatRoom = (user) => {
+  openChatRoom = (e,user) => {
+
     // console.log('LoggedIn User: ' , this.props.currentUser, 'Chatting with User: ', user)
     const chatID = this.createUniqueChatID(this.props.currentUser, user);
     const newChat = db.collection("chats").doc(chatID);
@@ -149,7 +150,7 @@ class Chat extends Component {
                 {this.state.searchedUsers
                   ? this.state.searchedUsers.map((user) => {
                       return (
-                        <Contact
+                        <Contact 
                           key={user.user_id}
                           users={user}
                           onClickUser={this.openChatRoom}
@@ -161,7 +162,7 @@ class Chat extends Component {
                         <Contact
                           key={user.user_id}
                           users={user}
-                          onClickUser={this.openChatRoom}
+                          onClickUser={(e)=>this.openChatRoom(e)}
                         />
                       );
                     })}
