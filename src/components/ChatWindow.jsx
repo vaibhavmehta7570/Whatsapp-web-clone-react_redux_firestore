@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "../assets/styles/chatWindow.css";
 import ReceiverCard from "./ReceiverCards";
 import SenderCard from "./SenderCard";
-import { fetchMessages, onSendMessage } from "../action/actionOnChatWindow";
+import { fetchMessages, onSendMessage } from "../actions/actionOnChatWindow";
 import { connect } from "react-redux";
 import avtarImag from "../assets/images/avtarImag.jpg";
 

@@ -8,7 +8,7 @@ import search from "../assets/images/search.svg";
 import { getUsers } from "../actions/contactActions";
 import { Link } from "react-router-dom";
 import ChatWindow from "./ChatWindow";
-import { fetchMessages } from '../action/actionOnChatWindow'
+import { fetchMessages } from '../actions/actionOnChatWindow'
 import { getCurrentUser } from '../actions/currentUserActions'
 
 class Chat extends Component {
