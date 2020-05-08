@@ -2,23 +2,23 @@ import React, { Component } from "react";
 import "../assets/styles/chatWindow.css";
 import ReceiverCard from "./ReceiverCards";
 import SenderCard from "./SenderCard";
-import firebase from "../services/firebase";
 import { fetchMessages, onSendMessage } from "../action/actionOnChatWindow";
 import { connect } from "react-redux";
 import avtarImag from "../assets/images/avtarImag.jpg";
+
 class ChatWindow extends Component {
   constructor(props) {
     super(props);
-    this.db = firebase.firestore();
     this.state = {
       message_body: "",
       inputMessage: "",
-      email: this.props.userDetails.email,
+      email: this.props.currentUser.email,
     };
   }
-  componentDidMount() {
-    this.props.fetchMessages(this.props.message);
-  }
+  // componentDidMount() {
+  //   console.log('mounted')
+  //   this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
+  // }
   handleOnchange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -27,7 +27,6 @@ class ChatWindow extends Component {
   };
 
   render() {
-    console.log(this.state.email);
     return (
       <React.Fragment>
         <div className="col-md-8 chat-window">
@@ -106,7 +105,8 @@ class ChatWindow extends Component {
                       onClick={() => {
                         this.props.onSendMessage(
                           this.state.message_body,
-                          this.state.email
+                          this.state.email,
+                          this.props.newChatDocRef
                         );
                         this.chageInputValueAfterSend();
                       }}

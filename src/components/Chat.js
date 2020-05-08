@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { db } from "../services/firebase";
+import { db, auth } from "../services/firebase";
 import "../assets/styles/Chat.css";
 import Contact from "./Contact";
 import user_default from "../assets/images/users.svg";
@@ -9,31 +9,64 @@ import search from "../assets/images/search.svg";
 import { getUsers } from "../actions/contactActions";
 import { Link } from "react-router-dom";
 import ChatWindow from "./ChatWindow";
+import { fetchMessages } from '../action/actionOnChatWindow'
+import { getCurrentUser } from '../actions/currentUserActions'
+import { userLoggedIn } from '../actions/authActions'
+
 class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
       searchString: "",
       searchedUsers: null,
-      currentUserDetail: null,
+      userToChatWith: null,
       showChatRoom: false,
+      newChatDocRef: null
     };
   }
+
   componentDidMount() {
+    this.checkAuthenticationState()
+  }
+
+  checkAuthenticationState = () => {
+    auth.onAuthStateChanged(user => {
+			if (user) {
+        db.collection('users')
+          .doc(user.uid)
+          .onSnapshot(
+            user => {
+                this.props.getCurrentUser(user.data())
+                this.getAllUsers()
+            },
+            err => {
+              console.error(`Looks like an error => ${err.message}`);
+            }
+          );
+			} else {
+        console.log('User is not logged in');
+        this.props.getCurrentUser({})
+			}
+		});
+  }
+
+  getAllUsers = () => {
     db.collection("users")
       .get()
       .then((snapshot) => {
         const users = [];
         snapshot.forEach((doc) => {
           const data = doc.data();
-          users.push(data);
+          if ( data.user_id !== this.props.currentUser.user_id) {
+            users.push(data);
+          }
         });
         this.props.getUsers(users);
       })
       .catch((error) => console.log(error));
   }
 
-  // TODO: handle search functionality in search contacts
+  // Search functionality in search contacts
   handelOnInputChange = (event) => {
     this.setState({ searchString: event.target.value }, () => {
       this.setState((state, props) => ({
@@ -45,9 +78,36 @@ class Chat extends Component {
       }));
     });
   };
+
+  handleSignOut = () => {
+		auth
+			.signOut()
+			.then(() => {
+        console.log('Sign Out successful');
+        this.props.userLoggedIn(null)
+			})
+			.catch(err => {
+				console.log('Sign Out failed', err);
+			});
+	};
+  
   openChatRoom = (user) => {
-    this.setState({ currentUserDetail: user, showChatRoom: true });
+    // console.log('LoggedIn User: ' , this.props.currentUser, 'Chatting with User: ', user)
+    const chatID = this.createUniqueChatID(this.props.currentUser, user);
+    console.log(chatID)
+    const newChat = db.collection('chats').doc(chatID);
+    this.setState({ userToChatWith: user, showChatRoom: true, newChatDocRef: newChat});
+    this.props.fetchMessages(this.props.message, newChat)
+
   };
+
+  createUniqueChatID = (loggedInUser, chatWithUser) => {
+    if(loggedInUser.user_id.toLowerCase() < chatWithUser.user_id.toLowerCase()) {
+      return loggedInUser.user_id + chatWithUser.user_id;
+    } else {
+      return chatWithUser.user_id + loggedInUser.user_id;
+    }
+  }
 
   render() {
     return (
@@ -66,6 +126,7 @@ class Chat extends Component {
                     <button
                       type="button"
                       className="logout-button btn btn-primary mr-2"
+                      onClick={this.handleSignOut}
                     >
                       Logout
                     </button>
@@ -86,7 +147,7 @@ class Chat extends Component {
                   ? this.state.searchedUsers.map((user) => {
                       return (
                         <Contact
-                          key={user.uid}
+                          key={user.user_id}
                           users={user}
                           onClickUser={this.openChatRoom}
                         />
@@ -95,7 +156,7 @@ class Chat extends Component {
                   : this.props.users.map((user) => {
                       return (
                         <Contact
-                          key={user.uid}
+                          key={user.user_id}
                           users={user}
                           onClickUser={this.openChatRoom}
                         />
@@ -105,7 +166,11 @@ class Chat extends Component {
             </div>
           </div>
           {this.state.showChatRoom ? (
-            <ChatWindow userDetails={this.state.currentUserDetail} />
+            <ChatWindow
+              userDetails={this.state.userToChatWith}
+              currentUser={this.props.currentUser}
+              newChatDocRef={this.state.newChatDocRef}
+            />
           ) : (
             <div className="col-md-8 chat-window before-chat">
               <div className="welcome-image ml-6 mb-2"></div>
@@ -125,11 +190,16 @@ class Chat extends Component {
 const mapStateToProps = (state) => {
   return {
     users: state.users,
+    currentUser: state.currentUser,
+    message: state.chats.message
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     getUsers: (data) => dispatch(getUsers(data)),
+    getCurrentUser: (data) => dispatch(getCurrentUser(data)),
+    userLoggedIn: data => dispatch(userLoggedIn(data)),
+    fetchMessages: (message, docRef) => dispatch(fetchMessages(message, docRef))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);

@@ -32,11 +32,6 @@ export default class Navbar extends Component {
 										Chat Screen
 									</NavLink>
 								</li>
-								<li className='nav-item'>
-									<NavLink className='nav-link' to='/chatWindow'>
-										Chat Window
-									</NavLink>
-								</li>
 							</ul>
 						</div>
 					</div>

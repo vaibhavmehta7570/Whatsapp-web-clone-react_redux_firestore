@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import firebase from '../services/firebase';
 import Navbar from './Navbar';
+import { userLoggedIn } from '../actions/authActions'
+import { connect } from 'react-redux';
 
 class SignUp extends Component {
 	state = {
@@ -38,7 +40,7 @@ class SignUp extends Component {
 					usersRef
 						.doc(res.user.uid)
 						.set({
-							uid: res.user.uid,
+							user_id: res.user.uid,
 							firstname,
 							lastname,
 							username: `${firstname} ${lastname}`,
@@ -52,12 +54,14 @@ class SignUp extends Component {
 								'success',
 								'Your account has been successfully created'
 							);
+							this.props.userLoggedIn(res.user)
 						})
 						.catch(err => {
 							this.signUpAlert(
 								'danger',
 								'Got an error: Account creation failed!'
 							);
+							this.props.userLoggedIn(null)
 						})
 						.finally(() => {
 							this.setState({
@@ -74,6 +78,7 @@ class SignUp extends Component {
 				.catch(err => {
 					console.error(`Looks like an error: ${err}`);
 					this.signUpAlert('danger', err.message);
+					this.props.userLoggedIn(null)
 				})
 				.finally(() => {
 					setTimeout(() => {
@@ -176,4 +181,8 @@ class SignUp extends Component {
 	}
 }
 
-export default SignUp;
+const mapDispatchToProps = dispatch => ({
+	userLoggedIn: (data) => dispatch(userLoggedIn(data))
+})
+
+export default connect(null, mapDispatchToProps)(SignUp);

@@ -8,7 +8,7 @@ const Contact = (props) => {
         <img src={user_default} height="40px" alt="contact" />
       </div>
       <div className="users-name">
-        <p className="userName mt-3">Name: {props.users.username}</p>
+        <p className="userName mt-3">{props.users.username}</p>
       </div>
     </div>
   );
