@@ -42,7 +42,9 @@ class ChatWindow extends Component {
                   />
                 </div>
                 <div className="user-name mt-1">
-                  {this.props.userDetails.username}
+                  <p style={{ textAlign: "left" }}>
+                    {this.props.userDetails.username}
+                  </p>
                 </div>
               </div>
               <div className="searchbar-icon">
