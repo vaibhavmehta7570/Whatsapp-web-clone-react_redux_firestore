@@ -15,10 +15,9 @@ class ChatWindow extends Component {
       email: this.props.currentUser.email,
     };
   }
-  // componentDidMount() {
-  //   console.log('mounted')
-  //   this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
-  // }
+  componentDidMount() {
+    this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
+  }
   handleOnchange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -65,6 +64,7 @@ class ChatWindow extends Component {
           </div>
           <div className="message-area">
             {this.props.message.map((message) =>
+              message !== undefined &&
               message.sender_id !== this.state.email ? (
                 <ReceiverCard
                   key={message.message_id}
