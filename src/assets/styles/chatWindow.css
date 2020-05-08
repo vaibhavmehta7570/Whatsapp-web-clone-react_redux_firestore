@@ -12,12 +12,12 @@
   background-color: #ededed;
 }
 .message-area {
-  height: 81vh;
+  height: 79%;
   overflow-y: scroll;
   /* overflow-x: hidden; */
 }
 .footer-bar {
-  height: 65px;
+  height: 64px;
   background-color: #e5ddd5;
 }
 .footer-content {

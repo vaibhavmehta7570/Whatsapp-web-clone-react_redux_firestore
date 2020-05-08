@@ -16,7 +16,6 @@ class ChatWindow extends Component {
     };
   }
   componentDidMount() {
-    console.log('mounted')
     this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
   }
   handleOnchange = (e) => {
@@ -43,7 +42,9 @@ class ChatWindow extends Component {
                   />
                 </div>
                 <div className="user-name mt-1">
-                  {this.props.userDetails.username}
+                  <p style={{ textAlign: "left" }}>
+                    {this.props.userDetails.username}
+                  </p>
                 </div>
               </div>
               <div className="searchbar-icon">
@@ -65,6 +66,7 @@ class ChatWindow extends Component {
           </div>
           <div className="message-area">
             {this.props.message.map((message) =>
+              message !== undefined &&
               message.sender_id !== this.state.email ? (
                 <ReceiverCard
                   key={message.message_id}
