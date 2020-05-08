@@ -7,6 +7,8 @@ export const fetchMessageSuccess = (messageArr) => ({
 
 export const fetchMessages = (messages, chatDocRef) => {
   return async (dispatch) => {
+    try{
+      chatDocRef
         .collection("messages")
         .onSnapshot((doc) => {
           let mesageArray = [...messages];
