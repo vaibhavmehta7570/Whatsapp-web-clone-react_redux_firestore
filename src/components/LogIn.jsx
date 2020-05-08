@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import firebase from '../services/firebase';
 import googleLogo from '../assets/images/google_logo.svg';
 import Navbar from './Navbar';
-import { userLoggedIn } from '../actions/authActions'
+import { getCurrentUser } from '../actions/currentUserActions'
 import { connect } from 'react-redux';
 
 class LogIn extends Component {
@@ -29,13 +29,12 @@ class LogIn extends Component {
 			.auth()
 			.signInWithEmailAndPassword(email, password)
 			.then(res => {
-				console.log('Sign In successful', res.user);
-				this.signInAlert('success', 'Sign in successful');
-				this.props.userLoggedIn(res.user)
+				console.log('Sign In successful', res.user.email);
+				this.props.getCurrentUser(res.user)
 			})
 			.catch(err => {
 				console.log(`Looks like an error: `, err);
-				this.props.userLoggedIn(null)
+
 				switch (err.code) {
 					case 'auth/invalid-email':
 						return this.signInAlert(
@@ -59,13 +58,6 @@ class LogIn extends Component {
 						);
 				}
 			})
-			.finally(() => {
-				setTimeout(() => {
-					this.setState({
-						alert: false
-					});
-				}, 3000);
-			});
 	};
 
 	handleGoolgeSubmit = () => {
@@ -75,7 +67,6 @@ class LogIn extends Component {
 			.auth()
 			.signInWithPopup(provider)
 			.then(result => {
-				this.props.userLoggedIn(result)
 				if (result.additionalUserInfo.isNewUser) {
 					const firestore = firebase.firestore();
 					const usersRef = firestore.collection('users');
@@ -101,35 +92,19 @@ class LogIn extends Component {
 						})
 						.then(() => {
 							console.log('Google login success');
-							this.signInAlert(
-								'success',
-								'Your account has been successfully created using Google'
-							);
+							this.props.getCurrentUser(result)
 						})
 						.catch(err => {
 							console.error(`Looks like an error: ${err}`);
 							this.signInAlert('danger', err.message);
-							this.props.userLoggedIn(null)
 						})
-						.finally(() => {
-							setTimeout(() => {
-								this.setState({ alert: false });
-							}, 3000);
-						});
 				} else {
-					// TODO: directly redirect to chatscreen
-					this.signInAlert('success', 'Login successful using Google Account');
+					this.props.getCurrentUser(result)
 				}
 			})
 			.catch(err => {
-				this.props.userLoggedInError(err)
 				console.error(`Looks like an error: ${err}`);
 				this.signInAlert('danger', err.message);
-			})
-			.finally(() => {
-				setTimeout(() => {
-					this.setState({ alert: false });
-				}, 3000);
 			});
 	};
 
@@ -197,7 +172,7 @@ class LogIn extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-	userLoggedIn: (data) => dispatch(userLoggedIn(data)),
+	getCurrentUser: user => dispatch(getCurrentUser(user))
 })
 
 export default connect(null, mapDispatchToProps)(LogIn);

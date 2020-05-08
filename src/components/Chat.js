@@ -4,14 +4,12 @@ import { db, auth } from "../services/firebase";
 import "../assets/styles/Chat.css";
 import Contact from "./Contact";
 import user_default from "../assets/images/users.svg";
-import TextBox from "./TextBox";
 import search from "../assets/images/search.svg";
 import { getUsers } from "../actions/contactActions";
 import { Link } from "react-router-dom";
 import ChatWindow from "./ChatWindow";
 import { fetchMessages } from '../action/actionOnChatWindow'
 import { getCurrentUser } from '../actions/currentUserActions'
-import { userLoggedIn } from '../actions/authActions'
 
 class Chat extends Component {
   constructor(props) {
@@ -84,7 +82,7 @@ class Chat extends Component {
 			.signOut()
 			.then(() => {
         console.log('Sign Out successful');
-        this.props.userLoggedIn(null)
+
 			})
 			.catch(err => {
 				console.log('Sign Out failed', err);
@@ -191,14 +189,13 @@ const mapStateToProps = (state) => {
   return {
     users: state.users,
     currentUser: state.currentUser,
-    message: state.chats.message
+    message: state.chats.message,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     getUsers: (data) => dispatch(getUsers(data)),
     getCurrentUser: (data) => dispatch(getCurrentUser(data)),
-    userLoggedIn: data => dispatch(userLoggedIn(data)),
     fetchMessages: (message, docRef) => dispatch(fetchMessages(message, docRef))
   };
 };

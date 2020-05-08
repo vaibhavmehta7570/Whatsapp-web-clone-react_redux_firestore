@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../services/firebase';
 import Navbar from './Navbar';
-import { userLoggedIn } from '../actions/authActions'
-import { connect } from 'react-redux';
 
 class SignUp extends Component {
 	state = {
@@ -49,47 +47,21 @@ class SignUp extends Component {
 							createdAt: new Date()
 						})
 						.then(() => {
-							console.log(`Added user with ID: ${res.user.uid}`);
-							this.signUpAlert(
-								'success',
-								'Your account has been successfully created'
-							);
-							this.props.userLoggedIn(res.user)
+							console.log(`Added user with email: ${res.user.email}`);
 						})
 						.catch(err => {
 							this.signUpAlert(
 								'danger',
 								'Got an error: Account creation failed!'
 							);
-							this.props.userLoggedIn(null)
-						})
-						.finally(() => {
-							this.setState({
-								firstname: '',
-								lastname: '',
-								email: '',
-								password: ''
-							});
-							setTimeout(() => {
-								this.setState({ alert: false });
-							}, 3000);
 						});
 				})
 				.catch(err => {
 					console.error(`Looks like an error: ${err}`);
 					this.signUpAlert('danger', err.message);
-					this.props.userLoggedIn(null)
-				})
-				.finally(() => {
-					setTimeout(() => {
-						this.setState({ alert: false });
-					}, 3000);
 				});
 		} else {
 			this.signUpAlert('danger', 'Input fields can not be empty');
-			setTimeout(() => {
-				this.setState({ alert: false });
-			}, 3000);
 		}
 	};
 
@@ -181,8 +153,4 @@ class SignUp extends Component {
 	}
 }
 
-const mapDispatchToProps = dispatch => ({
-	userLoggedIn: (data) => dispatch(userLoggedIn(data))
-})
-
-export default connect(null, mapDispatchToProps)(SignUp);
+export default SignUp;
