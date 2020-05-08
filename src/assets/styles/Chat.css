@@ -4,10 +4,9 @@
   height: 100%;
 }
 .sidebar {
-  background-color: #dddddd;
+  background-color: #ededed;
   height: 100%;
   border: 1px solid #f1e3cb;
-  overflow-y: scroll;
 }
 .users {
   background-color: white;
@@ -19,26 +18,29 @@
   cursor: pointer;
 }
 .users:hover {
-  background-color: #dddddd;
+  background-color: #ffffffa6;
 }
 
 .userName {
   padding-left: 30px;
 }
-/* img {
-  height: 40px;
-} */
 .search-icon {
   height: 20px;
 }
-
+.search-bar {
+  background-color: #f7f7f7;
+  border: #f7f7f7 solid 10px;
+}
 .logout-button {
   border-radius: 100px;
 }
 .search {
-  width: 90%;
-  padding: 10px;
-  margin: 5px;
+  width: 80%;
+  height: 100%;
+  border: none;
+}
+.search:focus {
+  outline: none;
 }
 .initial-text {
   margin-left: 550px;
@@ -62,6 +64,7 @@ h3 {
   margin-top: 110px;
 }
 .before-chat {
+  height: 100%;
   background-color: #f8f9fa;
   display: flex;
   flex-direction: column;
@@ -71,4 +74,24 @@ h3 {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.45);
   line-height: 20px;
+}
+.user_list {
+  max-height: 78%;
+  overflow-y: scroll;
+}
+.user-icons {
+  display: flex;
+  justify-content: space-evenly;
+  color: #919191;
+}
+.icons-btn,
+.user-profile-img {
+  cursor: pointer;
+}
+.search-box {
+  text-align: left;
+  border-radius: 25px;
+  height: 35px;
+  background-color: #fff;
+  z-index: 100;
 }

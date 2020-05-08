@@ -1,5 +1,4 @@
 import { FETCH_ALL_MESSAGES } from "../constants";
-import firebase from "../services/firebase";
 
 export const fetchMessageSuccess = (messageArr) => ({
   type: FETCH_ALL_MESSAGES,
@@ -7,7 +6,6 @@ export const fetchMessageSuccess = (messageArr) => ({
 });
 
 export const fetchMessages = (messages, chatDocRef) => {
-  // var db = firebase.firestore();
   return async (dispatch) => {
     try {
       chatDocRef.collection("messages").onSnapshot((doc) => {
