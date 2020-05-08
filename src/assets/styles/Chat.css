@@ -1,54 +1,70 @@
-@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
-.sidebar{
-    position: fixed;
-    width: 400px;
-    top: 0;
-    left:0;
-    background-color:#dddddd;
-    height: 100%;
-    border:1px solid #f1e3cb;
-    overflow-y: scroll;
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap");
+.sidebar {
+  background-color: #dddddd;
+  height: 100%;
+  border: 1px solid #f1e3cb;
+  overflow-y: scroll;
 }
-.users{
-    background-color: white;
-    margin-top: 1px;
-    height:70px;
-    padding:5px;
+.users {
+  background-color: white;
+  margin-top: 1px;
+  height: 70px;
+  padding: 5px;
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
 }
-.users:hover{
-    background-color: #dddddd;
-}
-.inline-block{
-    display:inline-block
-}
-.userName{
-    padding-left: 30px;
-}
-img{
-    height:40px;
-}
-.search-icon{
-    height:20px;
+.users:hover {
+  background-color: #dddddd;
 }
 
-.logout-button{
-    border-radius: 100px;
+.userName {
+  padding-left: 30px;
 }
-.search{
-    width:90%;
-    padding:10px;
-    margin: 5px;
-}
-.initial-text{
-    margin-left:550px;   
-    margin-top: 200px;
-}
-h1,h3{
-    text-align: center;
-    font-family: 'Kaushan Script', cursive;
-}
-h1{
-
+/* img {
+  height: 40px;
+} */
+.search-icon {
+  height: 20px;
 }
 
-
+.logout-button {
+  border-radius: 100px;
+}
+.search {
+  width: 90%;
+  padding: 10px;
+  margin: 5px;
+}
+.initial-text {
+  margin-left: 550px;
+  margin-top: 200px;
+}
+h1,
+h3 {
+  text-align: center;
+  font-family: "Kaushan Script", cursive;
+}
+.logout-user-dp {
+  display: flex;
+  justify-content: space-between;
+}
+.welcome-image {
+  min-height: 280px;
+  width: 300px;
+  background-image: url("https://web.whatsapp.com/img/intro-connection_c98cc75f2aa905314d74375a975d2cf2.jpg");
+  background-repeat: no-repeat;
+  background-size: 250px 250px;
+  margin-top: 110px;
+}
+.before-chat {
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.before-chat p {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+  line-height: 20px;
+}

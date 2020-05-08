@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import firebase from '../services/firebase';
 import googleLogo from '../assets/images/google_logo.svg';
 import Navbar from './Navbar';
+import { userLoggedIn } from '../actions/authActions'
+import { connect } from 'react-redux';
 
 class LogIn extends Component {
 	state = {
@@ -27,11 +29,13 @@ class LogIn extends Component {
 			.auth()
 			.signInWithEmailAndPassword(email, password)
 			.then(res => {
-				console.log('Sign In successful', res.user.uid);
+				console.log('Sign In successful', res.user);
 				this.signInAlert('success', 'Sign in successful');
+				this.props.userLoggedIn(res.user)
 			})
 			.catch(err => {
 				console.log(`Looks like an error: `, err);
+				this.props.userLoggedIn(null)
 				switch (err.code) {
 					case 'auth/invalid-email':
 						return this.signInAlert(
@@ -71,6 +75,7 @@ class LogIn extends Component {
 			.auth()
 			.signInWithPopup(provider)
 			.then(result => {
+				this.props.userLoggedIn(result)
 				if (result.additionalUserInfo.isNewUser) {
 					const firestore = firebase.firestore();
 					const usersRef = firestore.collection('users');
@@ -84,7 +89,7 @@ class LogIn extends Component {
 					usersRef
 						.doc(result.user.uid)
 						.set({
-							uid: result.user.uid,
+							user_id: result.user.uid,
 							firstname,
 							lastname,
 							username: `${firstname} ${lastname}`,
@@ -104,6 +109,7 @@ class LogIn extends Component {
 						.catch(err => {
 							console.error(`Looks like an error: ${err}`);
 							this.signInAlert('danger', err.message);
+							this.props.userLoggedIn(null)
 						})
 						.finally(() => {
 							setTimeout(() => {
@@ -116,6 +122,7 @@ class LogIn extends Component {
 				}
 			})
 			.catch(err => {
+				this.props.userLoggedInError(err)
 				console.error(`Looks like an error: ${err}`);
 				this.signInAlert('danger', err.message);
 			})
@@ -132,18 +139,6 @@ class LogIn extends Component {
 			alertType,
 			alertMessage
 		});
-	};
-
-	handleSignOut = () => {
-		firebase
-			.auth()
-			.signOut()
-			.then(() => {
-				console.log('Sign Out successful');
-			})
-			.catch(err => {
-				console.log('Sign Out failed', err);
-			});
 	};
 
 	render() {
@@ -185,12 +180,6 @@ class LogIn extends Component {
 							<button type='submit' className='btn btn-primary'>
 								SIGN IN
 							</button>
-							<button
-								type='reset'
-								className='btn btn-secondary ml-4'
-								onClick={this.handleSignOut}>
-								SIGN OUT
-							</button>
 							<div className='btn ml-4'>
 								<img
 									src={googleLogo}
@@ -207,4 +196,8 @@ class LogIn extends Component {
 	}
 }
 
-export default LogIn;
+const mapDispatchToProps = dispatch => ({
+	userLoggedIn: (data) => dispatch(userLoggedIn(data)),
+})
+
+export default connect(null, mapDispatchToProps)(LogIn);
