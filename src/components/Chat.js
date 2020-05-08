@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import ChatWindow from "./ChatWindow";
 import { fetchMessages } from "../actions/actionOnChatWindow";
 import { getCurrentUser } from "../actions/currentUserActions";
-import { userLoggedIn } from "../actions/authActions";
 
 class Chat extends Component {
   constructor(props) {
@@ -86,17 +85,16 @@ class Chat extends Component {
   };
 
   handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        console.log("Sign Out successful");
-        this.props.userLoggedIn(null);
-      })
-      .catch((err) => {
-        console.log("Sign Out failed", err);
-      });
-  };
+		auth
+			.signOut()
+			.then(() => {
+        console.log('Sign Out successful');
 
+			})
+			.catch(err => {
+				console.log('Sign Out failed', err);
+			});
+	};
   openChatRoom = (user) => {
     const chatID = this.createUniqueChatID(this.props.currentUser, user);
     const newChat = db.collection("chats").doc(chatID);
@@ -266,9 +264,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getUsers: (data) => dispatch(getUsers(data)),
     getCurrentUser: (data) => dispatch(getCurrentUser(data)),
-    userLoggedIn: (data) => dispatch(userLoggedIn(data)),
-    fetchMessages: (message, docRef) =>
-      dispatch(fetchMessages(message, docRef)),
+    fetchMessages: (message, docRef) => dispatch(fetchMessages(message, docRef))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);
