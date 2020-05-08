@@ -82,6 +82,15 @@ class ChatWindow extends Component {
           </div>
           <div className="footer-bar">
             <footer claassname="footer-bar">
+            <form onSubmit={(event) => {
+              event.preventDefault()
+                this.props.onSendMessage(
+                  this.state.message_body,
+                  this.state.email,
+                  this.props.newChatDocRef
+                );
+                this.chageInputValueAfterSend();
+              }} >
               <div className="footer-content">
                 <div className="emoji-icon">
                   <button className="footer-icon">
@@ -102,14 +111,8 @@ class ChatWindow extends Component {
                   <div className="send-icon">
                     <button
                       className="footer-icon"
-                      onClick={() => {
-                        this.props.onSendMessage(
-                          this.state.message_body,
-                          this.state.email,
-                          this.props.newChatDocRef
-                        );
-                        this.chageInputValueAfterSend();
-                      }}
+                      type="submit"
+                      // onClick={}
                     >
                       <i className="fa fa-send-o"></i>
                     </button>
@@ -122,6 +125,7 @@ class ChatWindow extends Component {
                   </div>
                 )}
               </div>
+                </form>
             </footer>
           </div>
         </div>
