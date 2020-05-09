@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import "../assets/styles/chatWindow.css";
 import ReceiverCard from "./ReceiverCards";
@@ -27,7 +26,7 @@ class ChatWindow extends Component {
   };
 
   render() {
-	  console.log("current user name is"+ this.props.userDetails.username);
+    console.log("current user name is" + this.props.userDetails.username);
     return (
       <React.Fragment>
         <div className="col-md-8 chat-window">
@@ -49,20 +48,22 @@ class ChatWindow extends Component {
                   </p>
                 </div>
               </div>
-              <div className="searchbar-icon">
-                <button className="header-icon">
-                  <i className="fa fa-search"></i>
-                </button>
-              </div>
-              <div className="file-icon">
-                <button className="header-icon">
-                  <i className="fa fa-paperclip"></i>
-                </button>
-              </div>
-              <div className="menu-icon">
-                <button className="header-icon">
-                  <i className="fa fa-ellipsis-v"></i>
-                </button>
+              <div className="d-flex">
+                <div className="searchbar-icon mr-3">
+                  <button className="header-icon">
+                    <i className="fa fa-search"></i>
+                  </button>
+                </div>
+                <div className="file-icon mr-3">
+                  <button className="header-icon">
+                    <i className="fa fa-paperclip"></i>
+                  </button>
+                </div>
+                <div className="menu-icon mr-3">
+                  <button className="header-icon">
+                    <i className="fa fa-ellipsis-v"></i>
+                  </button>
+                </div>
               </div>
             </nav>
           </div>
@@ -89,49 +90,48 @@ class ChatWindow extends Component {
           </div>
           <div className="footer-bar">
             <footer claassname="footer-bar">
-            <form onSubmit={(event) => {
-              event.preventDefault()
-                this.props.onSendMessage(
-                  this.state.message_body,
-                  this.state.email,
-                  this.props.newChatDocRef
-                );
-                this.chageInputValueAfterSend();
-              }} >
-              <div className="footer-content">
-                <div className="emoji-icon">
-                  <button className="footer-icon">
-                    <i className="fa fa-smile-o"></i>
-                  </button>
-                </div>
-                <div className="form-group message-box">
-                  <input
-                    type="text"
-                    className="form-control message-input"
-                    name="message_body"
-                    value={this.state.message_body}
-                    onChange={this.handleOnchange}
-                    placeholder="Type a message"
-                  />
-                </div>
-                {this.state.message_body !== "" ? (
-                  <div className="send-icon">
-                    <button
-                      className="footer-icon"
-                      type="submit"
-                    >
-                      <i className="fa fa-send-o"></i>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="mic-icon mr-2">
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  this.props.onSendMessage(
+                    this.state.message_body,
+                    this.state.email,
+                    this.props.newChatDocRef
+                  );
+                  this.chageInputValueAfterSend();
+                }}
+              >
+                <div className="footer-content">
+                  <div className="emoji-icon">
                     <button className="footer-icon">
-                      <i className="fa fa-microphone"></i>
+                      <i className="fa fa-smile-o"></i>
                     </button>
                   </div>
-                )}
-              </div>
-                </form>
+                  <div className="form-group message-box">
+                    <input
+                      type="text"
+                      className="form-control message-input"
+                      name="message_body"
+                      value={this.state.message_body}
+                      onChange={this.handleOnchange}
+                      placeholder="Type a message"
+                    />
+                  </div>
+                  {this.state.message_body !== "" ? (
+                    <div className="send-icon">
+                      <button className="footer-icon" type="submit">
+                        <i className="fa fa-send-o"></i>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mic-icon mr-2">
+                      <button className="footer-icon">
+                        <i className="fa fa-microphone"></i>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </form>
             </footer>
           </div>
         </div>

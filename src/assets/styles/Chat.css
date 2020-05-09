@@ -38,6 +38,7 @@
   width: 80%;
   height: 100%;
   border: none;
+  /* display: inline; */
 }
 .search:focus {
   outline: none;
@@ -89,6 +90,7 @@ h3 {
   cursor: pointer;
 }
 .search-box {
+  display: flex;
   text-align: left;
   border-radius: 25px;
   height: 35px;

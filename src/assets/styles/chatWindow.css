@@ -5,6 +5,9 @@
 .chat-window {
   /* background-color: aqua; */
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 0px 0px;
   overflow-y: hidden;
 }
@@ -12,7 +15,7 @@
   background-color: #ededed;
 }
 .message-area {
-  height: 79%;
+  height: 80%;
   overflow-y: scroll;
   /* overflow-x: hidden; */
 }
@@ -60,7 +63,6 @@
   cursor: pointer;
 }
 .user-name {
-  width: 38rem;
   font-size: 20px;
   text-align: left;
 }

@@ -85,15 +85,15 @@ class Chat extends Component {
   };
 
   handleSignOut = () => {
-		auth
-			.signOut()
-			.then(() => {
-        console.log('Sign Out successful');
-			})
-			.catch(err => {
-				console.log('Sign Out failed', err);
-			});
-	};
+    auth
+      .signOut()
+      .then(() => {
+        console.log("Sign Out successful");
+      })
+      .catch((err) => {
+        console.log("Sign Out failed", err);
+      });
+  };
 
   openChatRoom = (user) => {
     const chatID = this.createUniqueChatID(this.props.currentUser, user);
@@ -190,20 +190,20 @@ class Chat extends Component {
                 <div className="search-box" onClick={this.animateSearchBar}>
                   {this.state.showArrow ? (
                     <i
-                      className="fas fa-arrow-left ml-4 mr-4 blue"
+                      className="fas fa-arrow-left ml-4 mr-3 mt-2 blue"
                       style={{ cursor: "pointer" }}
                       onClick={this.exitFromSearchBar}
                     ></i>
                   ) : (
                     <i
-                      className="fa fa-search ml-4 mr-4 light-"
+                      className="fa fa-search ml-4 mr-3 mt-2 light-"
                       style={{ cursor: "pointer", color: "#919191" }}
                     ></i>
                   )}
                   <input
                     type="text"
                     placeholder="Search or start a new chat"
-                    className="search"
+                    className=" form-control search"
                     onChange={this.handelOnInputChange}
                   />
                 </div>
@@ -212,7 +212,7 @@ class Chat extends Component {
                 {this.state.searchedUsers
                   ? this.state.searchedUsers.map((user) => {
                       return (
-                        <Contact 
+                        <Contact
                           key={user.user_id}
                           users={user}
                           onClickUser={this.openChatRoom}
@@ -224,7 +224,7 @@ class Chat extends Component {
                         <Contact
                           key={user.user_id}
                           users={user}
-                          onClickUser={(e)=>this.openChatRoom(e)}
+                          onClickUser={(e) => this.openChatRoom(e)}
                         />
                       );
                     })}
@@ -264,7 +264,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getUsers: (data) => dispatch(getUsers(data)),
     getCurrentUser: (data) => dispatch(getCurrentUser(data)),
-    fetchMessages: (message, docRef) => dispatch(fetchMessages(message, docRef))
+    fetchMessages: (message, docRef) =>
+      dispatch(fetchMessages(message, docRef)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);
