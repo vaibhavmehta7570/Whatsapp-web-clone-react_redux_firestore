@@ -14,6 +14,7 @@ import ContactInfo from "./ContactInfo";
 class Chat extends Component {
   constructor(props) {
     super(props);
+    this.container = React.createRef();
     this.state = {
       searchString: "",
       searchedUsers: null,
@@ -21,13 +22,35 @@ class Chat extends Component {
       showChatRoom: false,
       newChatDocRef: null,
       showArrow: false,
+      open: false,
       showContact: false,
     };
   }
+  handleButtonClick = () => {
+    this.setState((state) => {
+      return {
+        open: !state.open,
+      };
+    });
+  };
 
   componentDidMount() {
     this.checkAuthenticationState();
+    document.addEventListener("mousedown", this.handleClickOutside);
   }
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleClickOutside);
+  }
+  handleClickOutside = (event) => {
+    if (
+      this.container.current &&
+      !this.container.current.contains(event.target)
+    ) {
+      this.setState({
+        open: false,
+      });
+    }
+  };
 
   checkAuthenticationState = () => {
     auth.onAuthStateChanged((user) => {
@@ -67,7 +90,7 @@ class Chat extends Component {
   };
 
   // Search functionality in search contacts
-  handelOnInputChange = (event) => {
+  handleOnInputChange = (event) => {
     this.setState({ searchString: event.target.value }, () => {
       this.setState((state, props) => ({
         searchedUsers: props.users.filter((user) =>
@@ -106,6 +129,7 @@ class Chat extends Component {
       userToChatWith: user,
       showChatRoom: true,
       newChatDocRef: newChat,
+      bgColor: "grey",
     });
     this.props.fetchMessages([], newChat);
   };
@@ -153,15 +177,6 @@ class Chat extends Component {
                     height="40px"
                     className="user-profile-img rounded-circle"
                   />
-                  <Link to="/">
-                    <button
-                      type="button"
-                      className="logout-button btn btn-primary mr-2"
-                      onClick={this.handleSignOut}
-                    >
-                      Logout
-                    </button>
-                  </Link>
                   <div className="user-icons">
                     <div className="status-icon icons-btn mr-3 mt-2">
                       <svg
@@ -178,7 +193,7 @@ class Chat extends Component {
                       </svg>
                     </div>
 
-                    <div className="newChat-icon icons-btn mr-3 mt-2">
+                    <div className="newChat-icon icons-btn  mt-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -192,8 +207,13 @@ class Chat extends Component {
                       </svg>
                     </div>
 
-                    <div className="user-menu-icon icons-btn mr-3 mt-2">
+                    <div
+                      className="container user-menu-icon icons-btn  mt-2"
+                      ref={this.container}
+                    >
                       <svg
+                        type="button"
+                        onClick={this.handleButtonClick}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         width="24"
@@ -204,6 +224,18 @@ class Chat extends Component {
                           d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"
                         ></path>
                       </svg>
+                      {this.state.open && (
+                        <div class="dropdown">
+                          <ul>
+                            <li>Profile</li>
+                            <li>Settings</li>
+                            <li>New group</li>
+                            <Link to="/">
+                              <li onClick={this.handleSignOut}>Log out</li>
+                            </Link>
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

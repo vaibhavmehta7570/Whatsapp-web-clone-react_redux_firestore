@@ -8,12 +8,20 @@ import avtarImag from "../assets/images/users.svg";
 
 class ChatWindow extends Component {
   constructor(props) {
-    super(props);
+	super(props);
     this.state = {
       message_body: "",
       inputMessage: "",
       email: "",
     };
+  }
+  
+  scrollToBottom = () => {
+	this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  }
+  
+  componentDidUpdate() {
+	this.scrollToBottom();
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -26,11 +34,13 @@ class ChatWindow extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
+	this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
+	this.scrollToBottom();
   }
 
   handleOnchange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+			this.setState({ [e.target.name]: e.target.value });
+
   };
 
   chageInputValueAfterSend = () => {
@@ -121,6 +131,9 @@ class ChatWindow extends Component {
                 />
               )
             )}
+			<div className="auto-scroll"style={{ float:"left", clear: "both" }}
+             ref={(el) => { this.messagesEnd = el; }}>
+        </div>
           </div>
           <div className="footer-bar">
             <footer claassname="footer-bar">
@@ -138,7 +151,7 @@ class ChatWindow extends Component {
                       name="message_body"
                       value={this.state.message_body}
                       onChange={this.handleOnchange}
-                      placeholder="Type a message"
+                      placeholder="Type a message..."
                     />
                   </div>
                   {this.state.message_body !== "" ? (
