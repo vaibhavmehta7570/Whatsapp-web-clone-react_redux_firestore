@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "../assets/styles/userInfo.css";
 import userIcon from "../assets/images/users.svg";
 import cameraIcon from "../assets/images/camera-solid.svg";
+import { db } from "../services/firebase";
 
 class UserInfo extends Component {
   constructor(props) {
@@ -24,15 +25,37 @@ class UserInfo extends Component {
     this.setState({ editUserName: true });
   };
   saveUpdatedName = () => {
+    var dbRef = db.collection("users").doc(this.props.id);
+    dbRef
+      .update({
+        username: this.state.userName,
+      })
+      .then(function () {
+        console.log("Name successfully updated!");
+      })
+      .catch(function (error) {
+        console.error("Error updating document: ", error);
+      });
     this.setState({ editUserName: false });
   };
   handleInputChange = (e) => {
-    this.setState({ [e.target.name]: this.state.userName + e.target.value });
+    this.setState({ [e.target.name]: e.target.value });
   };
   handleEditDescription = () => {
     this.setState({ editUserDescription: true });
   };
   saveUpdatedDescription = () => {
+    var dbRef = db.collection("users").doc(this.props.id);
+    dbRef
+      .update({
+        description: this.state.description,
+      })
+      .then(function () {
+        console.log("Description successfully updated!");
+      })
+      .catch(function (error) {
+        console.error("Error updating document: ", error);
+      });
     this.setState({ editUserDescription: false });
   };
   render() {
@@ -76,7 +99,6 @@ class UserInfo extends Component {
             </div>
           </div>
           <div className="profile-user-name">
-            {" "}
             {/* class for name*/}
             <div className="your-name-text">Your Name</div>
             <div className="display-user-name">
