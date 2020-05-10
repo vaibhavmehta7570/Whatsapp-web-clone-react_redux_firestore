@@ -1,16 +1,60 @@
-import React from "react";
+import React, { Component } from "react";
 import user_default from "../assets/images/users.svg";
 import "../assets/styles/Chat.css";
-const Contact = (props) => {
-  return (
-    <div className="users" onClick={() => props.onClickUser(props.users)}>
-      <div className="user-dp mt-2 ml-2">
-        <img src={user_default} height="40px" alt="contact" />
+class Contact extends Component {
+
+  constructor(props) {
+    super(props);
+    this.container = React.createRef();
+    // this.mouseOver = this.mouseOver.bind(this);
+    // this.mouseOut = this.mouseOut.bind(this);
+    this.state = {
+      contactArrowOpen: false,
+    };
+  }
+
+  componentDidMount() {
+    document.addEventListener("mousedown", this.handleClickOutside);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleClickOutside);
+  }
+  handleClickOutside = event => {
+    if (this.container.current && !this.container.current.contains(event.target)) {
+      this.setState({
+        contactArrowOpen: false,
+      });
+    }
+  };
+  handleButtonClick = () => {
+    this.setState(state => {
+      return {
+        contactArrowOpen: !state.contactArrowOpen,
+      };
+    });
+  };
+  render() {
+    return (
+      <div className="container-contact users" onClick={() => this.props.onClickUser(this.props.users)} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+        <div className="user-dp mt-2 ml-2 contact-list" >
+          <img src={user_default} height="40px" alt="contact" />
+          <p className="userName mt-3">{this.props.users.username}</p>
+        </div>
+        <div className="container-drop mt-3" ref={this.container} >
+          <img type="button" src="https://img.icons8.com/android/24/000000/expand-arrow.png" alt="down arrow" className="down-arrow" onClick={this.handleButtonClick} />
+            {this.state.contactArrowOpen && (
+              <div className="dropdown-contact">
+                <ul>
+                  <li>Archive chat</li>
+                  <li>Mute notification</li>
+                  <li>Delete Chat</li>
+                  <li>Mark as unread</li>
+                </ul>
+              </div>
+            )}
+        </div>
       </div>
-      <div className="users-name">
-        <p className="userName mt-3">{props.users.username}</p>
-      </div>
-    </div>
-  );
-};
+    );
+  };
+}
 export default Contact;

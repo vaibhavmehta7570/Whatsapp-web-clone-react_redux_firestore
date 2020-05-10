@@ -9,20 +9,29 @@ import avtarImag from "../assets/images/avtarImag.jpg";
 
 class ChatWindow extends Component {
   constructor(props) {
-    super(props);
+	super(props);
     this.state = {
       message_body: "",
       inputMessage: "",
       email: this.props.currentUser.email,
     };
   }
+  scrollToBottom = () => {
+	this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  }
+  componentDidUpdate() {
+	this.scrollToBottom();
+  }
+  
   componentDidMount() {
-    this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
+	this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
+	this.scrollToBottom();
   }
   handleOnchange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+			this.setState({ [e.target.name]: e.target.value });
+
   };
-  chageInputValueAfterSend = () => {
+  changeInputValueAfterSend = () => {
     this.setState({ message_body: "" });
   };
 
@@ -31,8 +40,8 @@ class ChatWindow extends Component {
     return (
       <React.Fragment>
         <div className="col-md-8 chat-window">
-          <div className="header-bar">
-            <nav className="navbar">
+          <div className="header-bar ">
+            <nav className="navbar pt-4">
               <div className="username-image">
                 <div className="user-image mr-3">
                   <img
@@ -86,6 +95,9 @@ class ChatWindow extends Component {
                 />
               )
             )}
+			<div className="auto-scroll"style={{ float:"left", clear: "both" }}
+             ref={(el) => { this.messagesEnd = el; }}>
+        </div>
           </div>
           <div className="footer-bar">
             <footer claassname="footer-bar">
@@ -96,7 +108,7 @@ class ChatWindow extends Component {
                   this.state.email,
                   this.props.newChatDocRef
                 );
-                this.chageInputValueAfterSend();
+                this.changeInputValueAfterSend();
               }} >
               <div className="footer-content">
                 <div className="emoji-icon">
@@ -111,7 +123,7 @@ class ChatWindow extends Component {
                     name="message_body"
                     value={this.state.message_body}
                     onChange={this.handleOnchange}
-                    placeholder="Type a message"
+                    placeholder="Type a message..."
                   />
                 </div>
                 {this.state.message_body !== "" ? (

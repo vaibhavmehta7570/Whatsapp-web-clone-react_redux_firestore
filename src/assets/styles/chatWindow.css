@@ -24,6 +24,7 @@
   display: flex;
   justify-content: space-between;
   padding: 15px 14px;
+  padding-bottom: 0;
 }
 .footer-icon {
   font-size: 25px;
@@ -72,4 +73,8 @@
 }
 .header-icon:focus {
   outline: none;
+}
+.auto-scroll{
+  float:"left";
+   clear: "both";
 }
