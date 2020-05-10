@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import user_default from "../assets/images/users.svg";
 import "../assets/styles/Chat.css";
-class Contact extends Component {
 
+class Contact extends Component {
   constructor(props) {
     super(props);
     this.container = React.createRef();
@@ -14,9 +14,11 @@ class Contact extends Component {
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutside);
   }
+  
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
+  
   handleClickOutside = event => {
     if (this.container.current && !this.container.current.contains(event.target)) {
       this.setState({
@@ -24,6 +26,7 @@ class Contact extends Component {
       });
     }
   };
+
   handleButtonClick = () => {
     this.setState(state => {
       return {
@@ -31,11 +34,12 @@ class Contact extends Component {
       };
     });
   };
+
   render() {
     return (
-      <div className="container-contact users" onClick={() => this.props.onClickUser(this.props.users)} style={{ backgroundColor: this.props.highlight}}>
+      <div className="container-contact users" onClick={() => this.props.onClickUser(this.props.users)}>
         <div className="user-dp mt-2 ml-2 contact-list" >
-          <img src={user_default} height="40px" alt="contact" />
+          <img src={props.users.profile_pic || user_default} height="50px" alt="contact" />
           <p className="userName mt-3">{this.props.users.username}</p>
         </div>
         <div className="container-drop mt-3" ref={this.container} >
@@ -55,4 +59,5 @@ class Contact extends Component {
     );
   };
 }
+
 export default Contact;
