@@ -26,7 +26,6 @@ class ChatWindow extends Component {
   };
 
   render() {
-    console.log("current user name is" + this.props.userDetails.username);
     return (
       <React.Fragment>
         <div className="col-md-8 chat-window">
