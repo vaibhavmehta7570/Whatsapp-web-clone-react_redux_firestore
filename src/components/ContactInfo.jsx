@@ -38,7 +38,7 @@ class ContactInfo extends Component {
     return (
       <div className="col-lg-3 col-md-4 col-sm-7 chat-side-bar p-0">
         <div className="sidebar">
-          <div className="d-flex p-1">
+          <div className="d-flex">
             <img
               className="pointer m-3"
               src={closeIcon}

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../assets/styles/userInfo.css";
-import avtar from "../assets/images/avtar2.jpg";
+import userIcon from "../assets/images/users.svg";
+import cameraIcon from "../assets/images/camera-solid.svg";
 
 class UserInfo extends Component {
   constructor(props) {
@@ -57,15 +58,19 @@ class UserInfo extends Component {
         </header>
         <div className="profile-body">
           <div className="profile-pic-container">
-            <input
-              type="file"
-              accept="image/gif,image/jpeg,image/jpg,image/png"
-              className="select-file"
-            ></input>
             <div className="pic-container">
+              <div className="fake-hover-div rounded-circle flex-column align-items-center justify-content-center">
+                <img src={cameraIcon} alt="camera icon" width="20px" />
+                <p className="text-white w-50 mt-3">CHANGE PROFILE PHOTO</p>
+              </div>
+              <input
+                type="file"
+                accept="image/gif,image/jpeg,image/jpg,image/png"
+                className="select-file pointer"
+              ></input>
               <img
-                src={this.props.profilePic}
-                className="profile-image"
+                src={this.props.profilePic || userIcon}
+                className="profile-image rounded-circle"
                 alt="profile pic"
               />
             </div>

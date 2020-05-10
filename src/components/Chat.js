@@ -28,7 +28,7 @@ class Chat extends Component {
       showContact: false,
     };
   }
-  
+
   handleButtonClick = () => {
     this.setState((state) => {
       return {
@@ -169,6 +169,10 @@ class Chat extends Component {
     });
   };
 
+  activeContact = (user) => {
+    return this.state.userToChatWith?.user_id === user.user_id ? "active" : "";
+  };
+
   render() {
     const userDetail = this.props.currentUser;
     return (
@@ -191,17 +195,17 @@ class Chat extends Component {
               />
             ) : (
               <div className="sidebar">
-                <div className="user-detail mt-3 ml-2 mb-2">
-                  <div className="logout-user-dp ml-1">
+                <div className="user-detail">
+                  <div className="logout-user-dp d-flex justify-content-between p-2">
                     <img
                       src={this.props.currentUser?.profile_pic || user_default}
                       alt="current-user-icon"
                       height="40px"
-                      className="user-profile-img rounded-circle"
+                      className="user-profile-img pointer rounded-circle"
                       onClick={this.showUserInfo}
                     />
-                    <div className="user-icons">
-                      <div className="status-icon icons-btn mr-3 mt-2">
+                    <div className="user-icons d-flex align-items-center">
+                      <div className="status-icon pointer mr-3">
                         <svg
                           id="ee51d023-7db6-4950-baf7-c34874b80976"
                           xmlns="http://www.w3.org/2000/svg"
@@ -215,98 +219,101 @@ class Chat extends Component {
                           ></path>
                         </svg>
                       </div>
-                    <div className="newChat-icon icons-btn  mt-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
+                      <div className="newChat-icon pointer mx-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.944zm3-4H7.041V7.1h9.975v1.944z"
+                          ></path>
+                        </svg>
+                      </div>
+                      <div
+                        className="container user-menu-icon pointer mx-3"
+                        ref={this.container}
                       >
-                        <path
-                          fill="currentColor"
-                          d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.944zm3-4H7.041V7.1h9.975v1.944z"
-                        ></path>
-                      </svg>
+                        <svg
+                          type="button"
+                          onClick={this.handleButtonClick}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"
+                          ></path>
+                        </svg>
+                        {this.state.open && (
+                          <div class="dropdown">
+                            <ul>
+                              <li>Profile</li>
+                              <li>Settings</li>
+                              <li>New group</li>
+                              <Link to="/">
+                                <li onClick={this.handleSignOut}>Log out</li>
+                              </Link>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
                     </div>
-
-                    <div
-                      className="container user-menu-icon icons-btn  mt-2"
-                      ref={this.container}
-                    >
-                      <svg
-                        type="button"
-                        onClick={this.handleButtonClick}
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
-                      >
-                        <path
-                          fill="currentColor"
-                          d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"
-                        ></path>
-                      </svg>
-                      {this.state.open && (
-                        <div class="dropdown">
-                          <ul>
-                            <li>Profile</li>
-                            <li>Settings</li>
-                            <li>New group</li>
-                            <Link to="/">
-                              <li onClick={this.handleSignOut}>Log out</li>
-                            </Link>
-                          </ul>
-                        </div>
+                  </div>
+                  <div className="search-bar">
+                    <div className="search-box" onClick={this.animateSearchBar}>
+                      {this.state.showArrow ? (
+                        <i
+                          className="fas fa-arrow-left ml-4 mr-3 mt-2 blue"
+                          style={{ cursor: "pointer" }}
+                          onClick={this.exitFromSearchBar}
+                        ></i>
+                      ) : (
+                        <i
+                          className="fa fa-search ml-4 mr-3 mt-2 light-"
+                          style={{ cursor: "pointer", color: "#919191" }}
+                        ></i>
                       )}
+                      <input
+                        type="text"
+                        placeholder="Search or start a new chat"
+                        className=" form-control search"
+                        onChange={this.handelOnInputChange}
+                      />
                     </div>
                   </div>
-                </div>
-                <div className="search-bar">
-                  <div className="search-box" onClick={this.animateSearchBar}>
-                    {this.state.showArrow ? (
-                      <i
-                        className="fas fa-arrow-left ml-4 mr-3 mt-2 blue"
-                        style={{ cursor: "pointer" }}
-                        onClick={this.exitFromSearchBar}
-                      ></i>
-                    ) : (
-                      <i
-                        className="fa fa-search ml-4 mr-3 mt-2 light-"
-                        style={{ cursor: "pointer", color: "#919191" }}
-                      ></i>
-                    )}
-                    <input
-                      type="text"
-                      placeholder="Search or start a new chat"
-                      className=" form-control search"
-                      onChange={this.handelOnInputChange}
-                    />
+                  <div className="user_list">
+                    {this.state.searchedUsers
+                      ? this.state.searchedUsers.map((user) => {
+                          const activeContact = this.activeContact(user);
+                          return (
+                            <Contact
+                              key={user.user_id}
+                              users={user}
+                              onClickUser={this.openChatRoom}
+                              active={activeContact}
+                            />
+                          );
+                        })
+                      : this.props.users.map((user) => {
+                          const activeContact = this.activeContact(user);
+                          return (
+                            <Contact
+                              key={user.user_id}
+                              users={user}
+                              onClickUser={this.openChatRoom}
+                              active={activeContact}
+                            />
+                          );
+                        })}
                   </div>
                 </div>
-              <div className="user_list">
-                {this.state.searchedUsers
-                  ? this.state.searchedUsers.map((user) => {
-                      return (
-                        <Contact
-                          key={user.user_id}
-                          users={user}
-                          onClickUser={this.openChatRoom}
-                          userToChatWith={this.state.userToChatWith}
-                        />
-                      );
-                    })
-                  : this.props.users.map((user) => {
-                      return (
-                        <Contact
-                          key={user.user_id}
-                          users={user}
-                          onClickUser={this.openChatRoom}
-                          userToChatWith={this.state.userToChatWith}
-                        />
-                      );
-                    })}
               </div>
-            </div>
+            )}
           </div>
           {this.state.showChatRoom ? (
             <ChatWindow

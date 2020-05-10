@@ -9,9 +9,11 @@
   padding: 0px 0px;
   overflow-y: hidden;
 }
-.navbar {
+
+.header-bar {
   background-color: #ededed;
 }
+
 .message-area {
   height: 81%;
   overflow-y: scroll;
@@ -55,11 +57,6 @@
 .user-image {
   border-radius: 20px;
 }
-.username-image {
-  display: flex;
-  justify-content: flex-start;
-  cursor: pointer;
-}
 .user-name {
   font-size: 20px;
   text-align: left;
@@ -73,9 +70,10 @@
 .header-icon:focus {
   outline: none;
 }
-.auto-scroll{
-  float:"left";
-   clear: "both";
+.auto-scroll {
+  float: "left";
+  clear: "both";
+}
 
 .relative {
   position: relative;
