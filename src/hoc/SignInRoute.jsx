@@ -3,7 +3,6 @@ import { Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 const SignInRoute = ({ component: Component, isLoggedIn, path}) => {
-  console.log(isLoggedIn)
   return (
     <Route path={path} render={props => (
       isLoggedIn ? <Component {...props} /> : <Redirect to='/login' />

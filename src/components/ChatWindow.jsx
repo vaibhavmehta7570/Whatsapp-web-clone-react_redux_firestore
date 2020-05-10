@@ -4,7 +4,7 @@ import ReceiverCard from "./ReceiverCards";
 import SenderCard from "./SenderCard";
 import { fetchMessages, onSendMessage } from "../actions/actionOnChatWindow";
 import { connect } from "react-redux";
-import avtarImag from "../assets/images/avtarImag.jpg";
+import avtarImag from "../assets/images/users.svg";
 
 class ChatWindow extends Component {
   constructor(props) {
@@ -12,30 +12,64 @@ class ChatWindow extends Component {
     this.state = {
       message_body: "",
       inputMessage: "",
-      email: this.props.currentUser.email,
+      email: "",
     };
   }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.currentUser && props.currentUser.email !== state.email) {
+      return {
+        email: props.currentUser.email,
+      };
+    }
+    return state;
+  }
+
   componentDidMount() {
     this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
   }
+
   handleOnchange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
+
   chageInputValueAfterSend = () => {
     this.setState({ message_body: "" });
   };
 
+  sendMessage = (event) => {
+    event.preventDefault();
+    if (this.state.message_body.trim().length > 0) {
+      this.props.onSendMessage(
+        this.state.message_body,
+        this.state.email,
+        this.props.newChatDocRef
+      );
+    }
+    this.chageInputValueAfterSend();
+  };
+
   render() {
-    console.log("current user name is" + this.props.userDetails.username);
+    const { showContact, userDetails: { profile_pic } = {} } = this.props;
+
     return (
       <React.Fragment>
-        <div className="col-md-8 chat-window">
+        <div
+          className={
+            showContact
+              ? "col-lg-6 col-md-5 chat-window col-sm-hide"
+              : "col-8 chat-window"
+          }
+        >
           <div className="header-bar">
             <nav className="navbar">
-              <div className="username-image">
+              <div
+                className="username-image"
+                onClick={this.props.showContactInfo}
+              >
                 <div className="user-image mr-3">
                   <img
-                    src={avtarImag}
+                    src={profile_pic || avtarImag}
                     width="40px"
                     height="40px"
                     alt="profile pic"
@@ -67,7 +101,7 @@ class ChatWindow extends Component {
               </div>
             </nav>
           </div>
-          <div className="message-area">
+          <div className="message-area pb-3">
             {this.props.message.map((message) =>
               message !== undefined &&
               message.sender_id !== this.state.email ? (
@@ -90,20 +124,10 @@ class ChatWindow extends Component {
           </div>
           <div className="footer-bar">
             <footer claassname="footer-bar">
-              <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  this.props.onSendMessage(
-                    this.state.message_body,
-                    this.state.email,
-                    this.props.newChatDocRef
-                  );
-                  this.chageInputValueAfterSend();
-                }}
-              >
+              <form onSubmit={this.sendMessage}>
                 <div className="footer-content">
                   <div className="emoji-icon">
-                    <button className="footer-icon">
+                    <button className="footer-icon" type="button">
                       <i className="fa fa-smile-o"></i>
                     </button>
                   </div>
@@ -125,7 +149,7 @@ class ChatWindow extends Component {
                     </div>
                   ) : (
                     <div className="mic-icon mr-2">
-                      <button className="footer-icon">
+                      <button className="footer-icon" type="button">
                         <i className="fa fa-microphone"></i>
                       </button>
                     </div>
