@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import ChatWindow from "./ChatWindow";
 import { fetchMessages } from "../actions/actionOnChatWindow";
 import { getCurrentUser } from "../actions/currentUserActions";
+import ContactInfo from "./ContactInfo";
 
 class Chat extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class Chat extends Component {
       showChatRoom: false,
       newChatDocRef: null,
       showArrow: false,
+      showContact: false,
     };
   }
 
@@ -76,9 +78,11 @@ class Chat extends Component {
       }));
     });
   };
+
   animateSearchBar = () => {
     this.setState({ showArrow: true });
   };
+
   exitFromSearchBar = (e) => {
     e.stopPropagation();
     this.setState({ showArrow: false });
@@ -116,20 +120,38 @@ class Chat extends Component {
     }
   };
 
+  showContactInfo = () => {
+    this.setState({
+      showContact: true,
+    });
+  };
+
+  hideContactInfo = () => {
+    this.setState({
+      showContact: false,
+    });
+  };
+
   render() {
     return (
       <div className="container-fluid">
         <div className="row p-0">
           {/* user profile info*/}
-          <div className="col-md-4 chat-side-bar p-0">
+          <div
+            className={
+              this.state.showContact
+                ? "col-lg-3 col-md-3 col-sm-5 chat-side-bar p-0"
+                : "col-4 chat-side-bar p-0"
+            }
+          >
             <div className="sidebar">
               <div className="user-detail mt-3 ml-2 mb-2">
                 <div className="logout-user-dp ml-1">
                   <img
-                    src={user_default}
+                    src={this.props.currentUser?.profile_pic || user_default}
                     alt="current-user-icon"
                     height="40px"
-                    className="user-profile-img"
+                    className="user-profile-img rounded-circle"
                   />
                   <Link to="/">
                     <button
@@ -216,6 +238,7 @@ class Chat extends Component {
                           key={user.user_id}
                           users={user}
                           onClickUser={this.openChatRoom}
+                          userToChatWith={this.state.userToChatWith}
                         />
                       );
                     })
@@ -224,7 +247,8 @@ class Chat extends Component {
                         <Contact
                           key={user.user_id}
                           users={user}
-                          onClickUser={(e) => this.openChatRoom(e)}
+                          onClickUser={this.openChatRoom}
+                          userToChatWith={this.state.userToChatWith}
                         />
                       );
                     })}
@@ -236,9 +260,11 @@ class Chat extends Component {
               userDetails={this.state.userToChatWith}
               currentUser={this.props.currentUser}
               newChatDocRef={this.state.newChatDocRef}
+              showContactInfo={this.showContactInfo}
+              showContact={this.state.showContact}
             />
           ) : (
-            <div className="col-md-8 chat-window before-chat">
+            <div className="col-8 chat-window before-chat">
               <div className="welcome-image ml-6 mb-2"></div>
               <h3 style={{ color: "#525252" }}>Keep your phone connected</h3>
               <p>
@@ -248,11 +274,18 @@ class Chat extends Component {
               </p>
             </div>
           )}
+          {this.state.showContact && (
+            <ContactInfo
+              user={this.state.userToChatWith}
+              hideContactInfo={this.hideContactInfo}
+            />
+          )}
         </div>
       </div>
     );
   }
 }
+
 const mapStateToProps = (state) => {
   return {
     users: state.users,
@@ -260,6 +293,7 @@ const mapStateToProps = (state) => {
     message: state.chats.message,
   };
 };
+
 const mapDispatchToProps = (dispatch) => {
   return {
     getUsers: (data) => dispatch(getUsers(data)),
@@ -268,4 +302,5 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(fetchMessages(message, docRef)),
   };
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);

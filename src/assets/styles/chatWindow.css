@@ -3,11 +3,9 @@
   height: 100vh;
 }
 .chat-window {
-  /* background-color: aqua; */
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 0px 0px;
   overflow-y: hidden;
 }
@@ -15,13 +13,17 @@
   background-color: #ededed;
 }
 .message-area {
-  height: 80%;
+  height: 81%;
   overflow-y: scroll;
-  /* overflow-x: hidden; */
+  background-image: url("../images/chat-background.jpg");
+  background-repeat: repeat;
+  background-size: contain;
+  display: flex;
+  flex-direction: column;
 }
 .footer-bar {
   height: 64px;
-  background-color: #e5ddd5;
+  background-color: #f0f0f0;
 }
 .footer-content {
   display: flex;
@@ -36,11 +38,6 @@
 }
 .message-box {
   width: 87%;
-}
-.message-area {
-  background-image: url("../images/wtp.png");
-  display: flex;
-  flex-direction: column;
 }
 .footer-icon:focus {
   outline: none;
@@ -74,4 +71,18 @@
 }
 .header-icon:focus {
   outline: none;
+}
+
+.relative {
+  position: relative;
+}
+
+.message-time {
+  top: 10px;
+}
+
+@media all and (max-width: 768px) {
+  .chat-window.col-sm-hide {
+    display: none;
+  }
 }
