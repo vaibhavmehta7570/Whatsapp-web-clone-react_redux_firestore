@@ -7,25 +7,24 @@
 }
 .sidebar {
   background-color: #ededed;
-  height: 100%;
+  
   border: 1px solid #f1e3cb;
+  height:100%;
 }
 .users {
   background-color: white;
-  margin-top: 1px;
   height: 70px;
-  padding: 5px;
   display: flex;
   justify-content: flex-start;
   cursor: pointer;
 }
 .users:hover {
-  background-color: #ffffffa6;
+  background-color: #f5f5f5;
+}
+.users.active {
+  background-color: #ececec;
 }
 
-.userName {
-  padding-left: 30px;
-}
 .search-icon {
   height: 20px;
 }
@@ -79,8 +78,9 @@ h3 {
   line-height: 20px;
 }
 .user_list {
-  max-height: 78%;
+  max-height: 100%;
   overflow-y: scroll;
+  padding-bottom: 161px;
 }
 .user-icons {
   display: flex;
@@ -94,8 +94,65 @@ h3 {
 .search-box {
   display: flex;
   text-align: left;
-  border-radius: 25px;
-  height: 35px;
+  border-radius: 18px;
+  height: 36px;
   background-color: #fff;
   z-index: 100;
 }
+.container {
+  position: relative;
+  display: inline-block;
+}
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: -100px;
+  width: 150px;
+  z-index: 2;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
+  background-color: white;
+}
+.dropdown-contact {
+  position: absolute;
+  top: 50%;
+  left: -100px;
+  width: 150px;
+  z-index: 2;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
+  background-color: white;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  padding: 8px 12px;
+  text-align: left;
+  color: black;
+}
+li:hover {
+  background-color: rgba(0, 0, 0, 0.14);
+  cursor: pointer;
+}
+.down-arrow{
+  height: 15px;
+}
+.contact-list{
+  float: left;
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+}
+.container-drop{
+   position: relative;
+   display: none;
+}
+.container-contact:hover .container-drop{
+  display:inline-block;
+}
+
+

@@ -1,0 +1,47 @@
+.green-text {
+  font-size: 14px;
+  color: #009688;
+}
+
+.media-content {
+  color: #888;
+  font-size: 14px;
+}
+
+.bottom-border {
+  border-bottom: 1px solid #eee;
+}
+
+.border-bottom-card {
+  border-bottom: 1px solid #ccc;
+}
+
+.sidebar {
+  overflow: hidden;
+}
+
+.contact-info-container {
+  height: 90%;
+  overflow-y: auto;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+  background: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bbb;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
