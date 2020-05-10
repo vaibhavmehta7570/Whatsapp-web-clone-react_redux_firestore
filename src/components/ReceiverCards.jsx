@@ -17,7 +17,7 @@ function ReceiverCard(props) {
 				<img src={traingle} height='15px' width='25px' alt='cone' />
 			</span>
 			<div className='inner-parent receiver'>
-				<p className="username">~{props.username}</p>
+				{/* <p className="username">~{props.username}</p> */}
 				<p className="receive-msg">{props.message}</p>
 				{messageTime(props.message_time)}
 			</div>

@@ -11,22 +11,22 @@ import { fetchMessages } from "../actions/actionOnChatWindow";
 import { getCurrentUser } from "../actions/currentUserActions";
 
 class Chat extends Component {
-
-  	constructor(props) {
-	super(props);
-	this.container = React.createRef(); 
-	this.state = {
-	searchString: "",
+  constructor(props) {
+    super(props);
+    this.container = React.createRef();
+    this.state = {
+      searchString: "",
       searchedUsers: null,
       userToChatWith: null,
       showChatRoom: false,
       newChatDocRef: null,
-	  showArrow: false,
-	  open: false,
+      showArrow: false,
+      open: false,
+      bgColor: "",
     };
   }
   handleButtonClick = () => {
-    this.setState(state => {
+    this.setState((state) => {
       return {
         open: !state.open,
       };
@@ -34,18 +34,21 @@ class Chat extends Component {
   };
 
   componentDidMount() {
-	this.checkAuthenticationState();
-	document.addEventListener("mousedown", this.handleClickOutside);
+    this.checkAuthenticationState();
+    document.addEventListener("mousedown", this.handleClickOutside);
   }
   componentWillUnmount() {
-	document.removeEventListener("mousedown", this.handleClickOutside);
+    document.removeEventListener("mousedown", this.handleClickOutside);
   }
-  handleClickOutside = event => {
-	if (this.container.current && !this.container.current.contains(event.target)) {
-	  this.setState({
-		open: false,
-	  });
-	}
+  handleClickOutside = (event) => {
+    if (
+      this.container.current &&
+      !this.container.current.contains(event.target)
+    ) {
+      this.setState({
+        open: false,
+      });
+    }
   };
 
   checkAuthenticationState = () => {
@@ -106,15 +109,15 @@ class Chat extends Component {
   };
 
   handleSignOut = () => {
-		auth
-			.signOut()
-			.then(() => {
-        console.log('Sign Out successful');
-			})
-			.catch(err => {
-				console.log('Sign Out failed', err);
-			});
-	};
+    auth
+      .signOut()
+      .then(() => {
+        console.log("Sign Out successful");
+      })
+      .catch((err) => {
+        console.log("Sign Out failed", err);
+      });
+  };
 
   openChatRoom = (user) => {
     const chatID = this.createUniqueChatID(this.props.currentUser, user);
@@ -123,6 +126,7 @@ class Chat extends Component {
       userToChatWith: user,
       showChatRoom: true,
       newChatDocRef: newChat,
+      bgColor: "grey",
     });
     this.props.fetchMessages([], newChat);
   };
@@ -182,32 +186,36 @@ class Chat extends Component {
                       </svg>
                     </div>
 
-					<div className="container user-menu-icon icons-btn  mt-2"ref={this.container} >
-						
-						<svg 
-							type="button" onClick={this.handleButtonClick}
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							width="24"
-							height="24"
-						>
+                    <div
+                      className="container user-menu-icon icons-btn  mt-2"
+                      ref={this.container}
+                    >
+                      <svg
+                        type="button"
+                        onClick={this.handleButtonClick}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                      >
                         <path
                           fill="currentColor"
                           d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"
                         ></path>
                       </svg>
-					  {this.state.open && (
-					  <div class="dropdown">
-							<ul>
-							<li>Profile</li>
-							<li>Settings</li>
-							<li>New group</li>
-							<Link to="/"><li onClick={this.handleSignOut}>Log out</li></Link>
-							</ul>
-						</div>
-					)}
+                      {this.state.open && (
+                        <div class="dropdown">
+                          <ul>
+                            <li>Profile</li>
+                            <li>Settings</li>
+                            <li>New group</li>
+                            <Link to="/">
+                              <li onClick={this.handleSignOut}>Log out</li>
+                            </Link>
+                          </ul>
+                        </div>
+                      )}
                     </div>
-					
                   </div>
                 </div>
               </div>
@@ -237,7 +245,7 @@ class Chat extends Component {
                 {this.state.searchedUsers
                   ? this.state.searchedUsers.map((user) => {
                       return (
-                        <Contact 
+                        <Contact
                           key={user.user_id}
                           users={user}
                           onClickUser={this.openChatRoom}
@@ -249,7 +257,7 @@ class Chat extends Component {
                         <Contact
                           key={user.user_id}
                           users={user}
-                          onClickUser={(e)=>this.openChatRoom(e)}
+                          onClickUser={(e) => this.openChatRoom(e)}
                         />
                       );
                     })}
@@ -289,7 +297,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getUsers: (data) => dispatch(getUsers(data)),
     getCurrentUser: (data) => dispatch(getCurrentUser(data)),
-    fetchMessages: (message, docRef) => dispatch(fetchMessages(message, docRef))
+    fetchMessages: (message, docRef) =>
+      dispatch(fetchMessages(message, docRef)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);

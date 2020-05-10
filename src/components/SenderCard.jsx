@@ -16,7 +16,7 @@ function SenderCard(props) {
 			className='cards card-sender mt-2'
 			style={{ backgroundColor: 'transparent' }}>
 			<div className='inner-parent sender'>
-				<p className="sender_username">~You</p>
+				{/* <p className="sender_username">~You</p> */}
 				<p className="sender-msg"style={{}}>{props.message}</p>
 				{messageTime(props.message_time)}
 			</div>
