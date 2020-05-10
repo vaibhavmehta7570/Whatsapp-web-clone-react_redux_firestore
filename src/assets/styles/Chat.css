@@ -2,6 +2,8 @@
 
 .container-fluid {
   height: 100%;
+  scrollbar-color: rgba(0, 0, 0, 0.2) hsla(0, 0%, 100%, 0.1);
+  scrollbar-width: thin;
 }
 .sidebar {
   background-color: #ededed;

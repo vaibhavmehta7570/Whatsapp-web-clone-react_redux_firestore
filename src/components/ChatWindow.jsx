@@ -61,7 +61,7 @@ class ChatWindow extends Component {
 
   render() {
     const { showContact, userDetails: { profile_pic } = {} } = this.props;
-
+    
     return (
       <React.Fragment>
         <div

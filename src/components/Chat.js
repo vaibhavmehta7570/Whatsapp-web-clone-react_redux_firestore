@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import ChatWindow from "./ChatWindow";
 import { fetchMessages } from "../actions/actionOnChatWindow";
 import { getCurrentUser } from "../actions/currentUserActions";
+import UserInfo from "./UserInfo";
 import ContactInfo from "./ContactInfo";
 
 class Chat extends Component {
@@ -22,10 +23,12 @@ class Chat extends Component {
       showChatRoom: false,
       newChatDocRef: null,
       showArrow: false,
+      showUserInfo: false,
       open: false,
       showContact: false,
     };
   }
+  
   handleButtonClick = () => {
     this.setState((state) => {
       return {
@@ -38,9 +41,11 @@ class Chat extends Component {
     this.checkAuthenticationState();
     document.addEventListener("mousedown", this.handleClickOutside);
   }
+
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
+
   handleClickOutside = (event) => {
     if (
       this.container.current &&
@@ -144,6 +149,14 @@ class Chat extends Component {
     }
   };
 
+  showUserInfo = () => {
+    this.setState({ showUserInfo: true });
+  };
+
+  goBackToUserList = () => {
+    this.setState({ showUserInfo: false });
+  };
+
   showContactInfo = () => {
     this.setState({
       showContact: true,
@@ -157,10 +170,10 @@ class Chat extends Component {
   };
 
   render() {
+    const userDetail = this.props.currentUser;
     return (
       <div className="container-fluid">
         <div className="row p-0">
-          {/* user profile info*/}
           <div
             className={
               this.state.showContact
@@ -168,31 +181,40 @@ class Chat extends Component {
                 : "col-4 chat-side-bar p-0"
             }
           >
-            <div className="sidebar">
-              <div className="user-detail mt-3 ml-2 mb-2">
-                <div className="logout-user-dp ml-1">
-                  <img
-                    src={this.props.currentUser?.profile_pic || user_default}
-                    alt="current-user-icon"
-                    height="40px"
-                    className="user-profile-img rounded-circle"
-                  />
-                  <div className="user-icons">
-                    <div className="status-icon icons-btn mr-3 mt-2">
-                      <svg
-                        id="ee51d023-7db6-4950-baf7-c34874b80976"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
-                      >
-                        <path
-                          fill="currentColor"
-                          d="M12 20.664a9.163 9.163 0 0 1-6.521-2.702.977.977 0 0 1 1.381-1.381 7.269 7.269 0 0 0 10.024.244.977.977 0 0 1 1.313 1.445A9.192 9.192 0 0 1 12 20.664zm7.965-6.112a.977.977 0 0 1-.944-1.229 7.26 7.26 0 0 0-4.8-8.804.977.977 0 0 1 .594-1.86 9.212 9.212 0 0 1 6.092 11.169.976.976 0 0 1-.942.724zm-16.025-.39a.977.977 0 0 1-.953-.769 9.21 9.21 0 0 1 6.626-10.86.975.975 0 1 1 .52 1.882l-.015.004a7.259 7.259 0 0 0-5.223 8.558.978.978 0 0 1-.955 1.185z"
-                        ></path>
-                      </svg>
-                    </div>
-
+            {this.state.showUserInfo ? (
+              <UserInfo
+                handleGoBack={this.goBackToUserList}
+                userName={userDetail.username}
+                id={userDetail.user_id}
+                desc={userDetail.description}
+                profilePic={userDetail.profile_pic}
+              />
+            ) : (
+              <div className="sidebar">
+                <div className="user-detail mt-3 ml-2 mb-2">
+                  <div className="logout-user-dp ml-1">
+                    <img
+                      src={this.props.currentUser?.profile_pic || user_default}
+                      alt="current-user-icon"
+                      height="40px"
+                      className="user-profile-img rounded-circle"
+                      onClick={this.showUserInfo}
+                    />
+                    <div className="user-icons">
+                      <div className="status-icon icons-btn mr-3 mt-2">
+                        <svg
+                          id="ee51d023-7db6-4950-baf7-c34874b80976"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M12 20.664a9.163 9.163 0 0 1-6.521-2.702.977.977 0 0 1 1.381-1.381 7.269 7.269 0 0 0 10.024.244.977.977 0 0 1 1.313 1.445A9.192 9.192 0 0 1 12 20.664zm7.965-6.112a.977.977 0 0 1-.944-1.229 7.26 7.26 0 0 0-4.8-8.804.977.977 0 0 1 .594-1.86 9.212 9.212 0 0 1 6.092 11.169.976.976 0 0 1-.942.724zm-16.025-.39a.977.977 0 0 1-.953-.769 9.21 9.21 0 0 1 6.626-10.86.975.975 0 1 1 .52 1.882l-.015.004a7.259 7.259 0 0 0-5.223 8.558.978.978 0 0 1-.955 1.185z"
+                          ></path>
+                        </svg>
+                      </div>
                     <div className="newChat-icon icons-btn  mt-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -239,29 +261,28 @@ class Chat extends Component {
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="search-bar">
-                <div className="search-box" onClick={this.animateSearchBar}>
-                  {this.state.showArrow ? (
-                    <i
-                      className="fas fa-arrow-left ml-4 mr-3 mt-2 blue"
-                      style={{ cursor: "pointer" }}
-                      onClick={this.exitFromSearchBar}
-                    ></i>
-                  ) : (
-                    <i
-                      className="fa fa-search ml-4 mr-3 mt-2 light-"
-                      style={{ cursor: "pointer", color: "#919191" }}
-                    ></i>
-                  )}
-                  <input
-                    type="text"
-                    placeholder="Search or start a new chat"
-                    className=" form-control search"
-                    onChange={this.handelOnInputChange}
-                  />
+                <div className="search-bar">
+                  <div className="search-box" onClick={this.animateSearchBar}>
+                    {this.state.showArrow ? (
+                      <i
+                        className="fas fa-arrow-left ml-4 mr-3 mt-2 blue"
+                        style={{ cursor: "pointer" }}
+                        onClick={this.exitFromSearchBar}
+                      ></i>
+                    ) : (
+                      <i
+                        className="fa fa-search ml-4 mr-3 mt-2 light-"
+                        style={{ cursor: "pointer", color: "#919191" }}
+                      ></i>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="Search or start a new chat"
+                      className=" form-control search"
+                      onChange={this.handelOnInputChange}
+                    />
+                  </div>
                 </div>
-              </div>
               <div className="user_list">
                 {this.state.searchedUsers
                   ? this.state.searchedUsers.map((user) => {

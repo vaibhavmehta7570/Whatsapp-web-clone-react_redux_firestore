@@ -1,0 +1,104 @@
+.profile-header {
+  background-color: #00bfa5;
+  height: 108px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.left-arrow {
+  width: 53px;
+  cursor: pointer;
+}
+.profile-header-content {
+  height: 59px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: #fff;
+}
+.header-title {
+  font-size: 19px;
+}
+.profile-body {
+  background-color: #ededed;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: ; */
+}
+.profile-pic-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+  margin-top: 28px;
+  transform-origin: center center;
+}
+.pic-container {
+  height: 200px;
+  width: 200px;
+  z-index: 1;
+}
+.profile-image {
+  height: 100%;
+  width: 100%;
+  border-radius: 100px;
+  visibility: visible;
+  cursor: pointer;
+  background: url("../images/avtar2.jpg");
+  z-index: 100;
+}
+.profile-user-name,
+.profile-description {
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 14px 30px 10px;
+}
+.edit-user-name,
+.show-user-name,
+.edit-description,
+.show-description {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.your-name-text,
+.about {
+  color: #009688;
+  text-align: left;
+  font-size: 14px;
+  padding-bottom: 18px;
+}
+.tick-icon,
+.pencil-icon {
+  color: #919191;
+  cursor: pointer;
+}
+.input-name {
+  border: none;
+  height: auto;
+  padding: 0rem 0.75rem;
+}
+.edit-user-name,
+.edit-description {
+  border-bottom: 2px solid #00bfa5;
+}
+.profile-info-message {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  line-height: 20px;
+  margin: 10px 28px 28px 30px;
+  /* padding-bottom: 17px; */
+  text-align: left;
+}
+.select-file {
+  position: absolute;
+  top: auto;
+  left: 115px;
+  height: 200px;
+  width: 200px;
+  /* text-align: right; */
+  opacity: 0;
+  z-index: 2;
+}
+.select-file:focus {
+  outline: none;
+}

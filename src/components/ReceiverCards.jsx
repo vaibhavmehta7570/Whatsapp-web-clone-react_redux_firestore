@@ -1,6 +1,7 @@
 import React from "react";
 import "../assets/styles/cards.css";
 import traingle from "../assets/images/triangle-top-right.svg";
+
 function messageTime(timestamp) {
   var date = new Date(timestamp);
   var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
@@ -11,6 +12,7 @@ function messageTime(timestamp) {
   var time = hours + ":" + minutes + " " + am_pm;
   return <p className="receiver-time"> {time} </p>;
 }
+
 function ReceiverCard(props) {
   return (
     <div className="cards mt-2" style={{ backgroundColor: "transparent" }}>
@@ -26,4 +28,5 @@ function ReceiverCard(props) {
     </div>
   );
 }
+
 export default ReceiverCard;
