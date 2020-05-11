@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { db, auth } from "../services/firebase";
 import "../assets/styles/Chat.css";
 import Contact from "./Contact";
 import user_default from "../assets/images/users.svg";
 import { getUsers } from "../actions/contactActions";
-import { Link } from "react-router-dom";
 import ChatWindow from "./ChatWindow";
 import { fetchMessages } from "../actions/actionOnChatWindow";
 import { getCurrentUser } from "../actions/currentUserActions";
@@ -282,7 +282,7 @@ class Chat extends Component {
                         type="text"
                         placeholder="Search or start a new chat"
                         className=" form-control search"
-                        onChange={this.handelOnInputChange}
+                        onChange={this.handleOnInputChange}
                       />
                     </div>
                   </div>

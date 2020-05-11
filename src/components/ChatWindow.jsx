@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import "../assets/styles/chatWindow.css";
 import ReceiverCard from "./ReceiverCards";
 import SenderCard from "./SenderCard";
 import { fetchMessages, onSendMessage } from "../actions/actionOnChatWindow";
-import { connect } from "react-redux";
 import avtarImag from "../assets/images/users.svg";
 
 class ChatWindow extends Component {
