@@ -38,7 +38,7 @@ class SignUp extends Component {
 					usersRef
 						.doc(res.user.uid)
 						.set({
-							uid: res.user.uid,
+							user_id: res.user.uid,
 							firstname,
 							lastname,
 							username: `${firstname} ${lastname}`,
@@ -47,44 +47,21 @@ class SignUp extends Component {
 							createdAt: new Date()
 						})
 						.then(() => {
-							console.log(`Added user with ID: ${res.user.uid}`);
-							this.signUpAlert(
-								'success',
-								'Your account has been successfully created'
-							);
+							console.log(`Added user with email: ${res.user.email}`);
 						})
 						.catch(err => {
 							this.signUpAlert(
 								'danger',
 								'Got an error: Account creation failed!'
 							);
-						})
-						.finally(() => {
-							this.setState({
-								firstname: '',
-								lastname: '',
-								email: '',
-								password: ''
-							});
-							setTimeout(() => {
-								this.setState({ alert: false });
-							}, 3000);
 						});
 				})
 				.catch(err => {
 					console.error(`Looks like an error: ${err}`);
 					this.signUpAlert('danger', err.message);
-				})
-				.finally(() => {
-					setTimeout(() => {
-						this.setState({ alert: false });
-					}, 3000);
 				});
 		} else {
 			this.signUpAlert('danger', 'Input fields can not be empty');
-			setTimeout(() => {
-				this.setState({ alert: false });
-			}, 3000);
 		}
 	};
 

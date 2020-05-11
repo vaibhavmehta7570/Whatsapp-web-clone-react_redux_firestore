@@ -1,17 +1,14 @@
 import { FETCH_ALL_MESSAGES } from "../constants";
-import firebase from "../services/firebase";
 
 export const fetchMessageSuccess = (messageArr) => ({
   type: FETCH_ALL_MESSAGES,
   payload: messageArr,
 });
 
-export const fetchMessages = (messages) => {
-  var db = firebase.firestore();
+export const fetchMessages = (messages, chatDocRef) => {
   return async (dispatch) => {
-    try {
-      db.collection("messages")
-        .doc("user1user2")
+    try{
+      chatDocRef
         .collection("messages")
         .onSnapshot((doc) => {
           let mesageArray = [...messages];
@@ -47,17 +44,14 @@ export const sortMessages = (messageArr) => {
   return messageArr;
 };
 
-export const onSendMessage = (messageBody, email) => {
-  var db = firebase.firestore();
-  return async (dispatch) => {
+export const onSendMessage = (messageBody, email, chatDocRef) => {
+  return (dispatch) => {
     try {
-      var docRef = db
-        .collection("messages")
-        .doc("user1user2")
+      var docRef = chatDocRef
         .collection("messages")
         .doc();
 
-      var newMsg = await docRef.set({
+      docRef.set({
         message_body: messageBody,
         sender_id: email,
         message_id: docRef.id,

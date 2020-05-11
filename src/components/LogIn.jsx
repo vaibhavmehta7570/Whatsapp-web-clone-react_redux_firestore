@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import firebase from '../services/firebase';
 import googleLogo from '../assets/images/google_logo.svg';
 import Navbar from './Navbar';
+import { getCurrentUser } from '../actions/currentUserActions'
+import { connect } from 'react-redux';
 
 class LogIn extends Component {
 	state = {
@@ -27,11 +29,12 @@ class LogIn extends Component {
 			.auth()
 			.signInWithEmailAndPassword(email, password)
 			.then(res => {
-				console.log('Sign In successful', res.user.uid);
-				this.signInAlert('success', 'Sign in successful');
+				console.log('Sign In successful', res.user.email);
+				this.props.getCurrentUser(res.user)
 			})
 			.catch(err => {
 				console.log(`Looks like an error: `, err);
+
 				switch (err.code) {
 					case 'auth/invalid-email':
 						return this.signInAlert(
@@ -55,13 +58,6 @@ class LogIn extends Component {
 						);
 				}
 			})
-			.finally(() => {
-				setTimeout(() => {
-					this.setState({
-						alert: false
-					});
-				}, 3000);
-			});
 	};
 
 	handleGoolgeSubmit = () => {
@@ -84,7 +80,7 @@ class LogIn extends Component {
 					usersRef
 						.doc(result.user.uid)
 						.set({
-							uid: result.user.uid,
+							user_id: result.user.uid,
 							firstname,
 							lastname,
 							username: `${firstname} ${lastname}`,
@@ -96,33 +92,19 @@ class LogIn extends Component {
 						})
 						.then(() => {
 							console.log('Google login success');
-							this.signInAlert(
-								'success',
-								'Your account has been successfully created using Google'
-							);
+							this.props.getCurrentUser(result)
 						})
 						.catch(err => {
 							console.error(`Looks like an error: ${err}`);
 							this.signInAlert('danger', err.message);
 						})
-						.finally(() => {
-							setTimeout(() => {
-								this.setState({ alert: false });
-							}, 3000);
-						});
 				} else {
-					// TODO: directly redirect to chatscreen
-					this.signInAlert('success', 'Login successful using Google Account');
+					this.props.getCurrentUser(result)
 				}
 			})
 			.catch(err => {
 				console.error(`Looks like an error: ${err}`);
 				this.signInAlert('danger', err.message);
-			})
-			.finally(() => {
-				setTimeout(() => {
-					this.setState({ alert: false });
-				}, 3000);
 			});
 	};
 
@@ -132,18 +114,6 @@ class LogIn extends Component {
 			alertType,
 			alertMessage
 		});
-	};
-
-	handleSignOut = () => {
-		firebase
-			.auth()
-			.signOut()
-			.then(() => {
-				console.log('Sign Out successful');
-			})
-			.catch(err => {
-				console.log('Sign Out failed', err);
-			});
 	};
 
 	render() {
@@ -185,12 +155,6 @@ class LogIn extends Component {
 							<button type='submit' className='btn btn-primary'>
 								SIGN IN
 							</button>
-							<button
-								type='reset'
-								className='btn btn-secondary ml-4'
-								onClick={this.handleSignOut}>
-								SIGN OUT
-							</button>
 							<div className='btn ml-4'>
 								<img
 									src={googleLogo}
@@ -207,4 +171,8 @@ class LogIn extends Component {
 	}
 }
 
-export default LogIn;
+const mapDispatchToProps = dispatch => ({
+	getCurrentUser: user => dispatch(getCurrentUser(user))
+})
+
+export default connect(null, mapDispatchToProps)(LogIn);
