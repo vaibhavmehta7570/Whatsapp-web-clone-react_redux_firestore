@@ -3,6 +3,7 @@ import "../assets/styles/userInfo.css";
 import userIcon from "../assets/images/users.svg";
 import cameraIcon from "../assets/images/camera-solid.svg";
 import { db } from "../services/firebase";
+import { storage } from "../services/firebase";
 
 class UserInfo extends Component {
   constructor(props) {
@@ -12,6 +13,8 @@ class UserInfo extends Component {
       editUserDescription: false,
       userName: "",
       description: "",
+      image: "",
+      imageURL: null,
     };
   }
 
@@ -58,7 +61,46 @@ class UserInfo extends Component {
       });
     this.setState({ editUserDescription: false });
   };
+  changeProfilePic = (event) => {
+    console.log(event.target.files[0]);
+    let imageName = event.target.files[0].name;
+    this.setState({ image: event.target.files[0] }, () => {
+      this.uploadProfilePicToStorage(imageName);
+    });
+  };
+
+  uploadProfilePicToStorage = async (image_name) => {
+    var storageRef = storage.ref();
+    var imageLoc = storageRef.child(
+      `profilePic/${this.props.id}/${image_name}`
+    );
+    let snapshot = await imageLoc.put(this.state.image);
+    console.log(snapshot);
+    let imgURL = await storageRef
+      .child(snapshot.metadata.fullPath)
+      .getDownloadURL();
+    console.log(imgURL);
+    this.setState({ imageURL: imgURL }, () => {
+      this.updateProfilePic();
+    });
+  };
+  updateProfilePic = () => {
+    console.log(this.state.imageURL);
+    var dbRef = db.collection("users").doc(this.props.id);
+    dbRef
+      .update({
+        profile_pic: this.state.imageURL,
+      })
+      .then(function () {
+        console.log("profile pic successfully updated!");
+      })
+      .catch(function (error) {
+        console.error("Error updating profile pic: ", error);
+      });
+  };
+
   render() {
+    // console.log(this.state.image_name);
     return (
       <div className="sidebar">
         <header className="profile-header">
@@ -90,10 +132,15 @@ class UserInfo extends Component {
                 type="file"
                 accept="image/gif,image/jpeg,image/jpg,image/png"
                 className="select-file pointer"
+                onChange={(e) => {
+                  this.changeProfilePic(e);
+                }}
               ></input>
               <img
                 src={this.props.profilePic || userIcon}
                 className="profile-image rounded-circle"
+                height="100%"
+                width="100%"
                 alt="profile pic"
               />
             </div>

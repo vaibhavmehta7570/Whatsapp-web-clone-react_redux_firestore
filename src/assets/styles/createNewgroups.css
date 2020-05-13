@@ -1,0 +1,16 @@
+.group-pane-body {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.search-group-user {
+  border-bottom: 1px solid rgba(98, 96, 96, 0.507);
+  text-align: left;
+  /* border-width: 60%; */
+}
+.group-search {
+  border: none;
+}
+.group-search:focus {
+  outline: none;
+}
