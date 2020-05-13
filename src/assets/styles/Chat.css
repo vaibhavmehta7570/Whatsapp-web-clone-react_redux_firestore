@@ -7,7 +7,6 @@
 }
 .sidebar {
   background-color: #ededed;
-
   border: 1px solid #f1e3cb;
   height: 100%;
 }
@@ -39,7 +38,6 @@
   width: 80%;
   height: 100%;
   border: none;
-  /* display: inline; */
 }
 .search:focus {
   outline: none;
@@ -147,4 +145,13 @@ li:hover {
 }
 .container-contact:hover .container-drop {
   display: inline-block;
+}
+
+.user-detail {
+  height: 100%;
+}
+
+.user-list-container {
+  height: 83%;
+  overflow-y: auto;
 }
