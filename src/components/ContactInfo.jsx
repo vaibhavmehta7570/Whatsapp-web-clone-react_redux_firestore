@@ -49,12 +49,13 @@ class ContactInfo extends Component {
           </div>
           <div className="contact-info-container">
             <div className="bg-white">
-              <img
-                className="rounded-circle m-4"
-                src={profile_pic}
-                alt="profile pic of contact"
-                width="200px"
-              />
+                <img
+                  className="rounded-circle m-4"
+                  src={profile_pic}
+                  alt="profile pic of contact"
+                  width="200px"
+                  height="200px"
+                />
               <div className="contact-name text-left pl-4 pb-5 h5">
                 {username}
               </div>
