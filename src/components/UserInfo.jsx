@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "../assets/styles/userInfo.css";
-import userIcon from "../assets/images/users.svg";
-import cameraIcon from "../assets/images/camera-solid.svg";
 import { db } from "../services/firebase";
 import { storage } from "../services/firebase";
+import userIcon from "../assets/images/users.svg";
+import ImageUploader from "./ImageUploader";
 
 class UserInfo extends Component {
   constructor(props) {
@@ -121,29 +121,11 @@ class UserInfo extends Component {
           </div>
         </header>
         <div className="profile-body">
-          <div className="profile-pic-container">
-            <div className="pic-container">
-              <div className="fake-hover-div rounded-circle flex-column align-items-center justify-content-center">
-                <img src={cameraIcon} alt="camera icon" width="20px" />
-                <p className="text-white w-50 mt-3">CHANGE PROFILE PHOTO</p>
-              </div>
-              <input
-                type="file"
-                accept="image/gif,image/jpeg,image/jpg,image/png"
-                className="select-file pointer"
-                onChange={(e) => {
-                  this.changeProfilePic(e);
-                }}
-              ></input>
-              <img
-                src={this.props.profilePic || userIcon}
-                className="profile-image rounded-circle"
-                height="100%"
-                width="100%"
-                alt="profile pic"
-              />
-            </div>
-          </div>
+          <ImageUploader
+            textContent="CHANGE PROFILE PHOTO"
+            changePic={this.changeProfilePic}
+            imageSrc={this.props.profilePic || userIcon}
+          />
           <div className="profile-user-name">
             {/* class for name*/}
             <div className="your-name-text">Your Name</div>

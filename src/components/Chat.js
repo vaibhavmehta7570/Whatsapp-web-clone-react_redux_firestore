@@ -12,7 +12,7 @@ import { getCurrentUser } from "../actions/currentUserActions";
 import UserInfo from "./UserInfo";
 import ContactInfo from "./ContactInfo";
 import NotificationSwitch from "./NotificationSwitch";
-import CreateNewgroup from "./CreateNewGroup";
+import CreateNewGroup from "./groups/CreateNewGroup";
 
 class Chat extends Component {
   constructor(props) {
@@ -208,11 +208,11 @@ class Chat extends Component {
   };
 
   showCreateGroup = () => {
-    this.setState({ showCreateGroupPane: true, showUsersListSidebar: false });
+    this.setState({ showCreateGroupPane: true, showUsersListSidebar: false, open: false });
   };
 
   goBackToUserList = () => {
-    this.setState({ showUserInfo: false, showUsersListSidebar: true });
+    this.setState({ showUserInfo: false, showUsersListSidebar: true, open: false });
   };
 
   goBackFromCreateGroup = () => {
@@ -272,7 +272,7 @@ class Chat extends Component {
             }
           >
             {this.state.showCreateGroupPane ? (
-              <CreateNewgroup handleGoBack={this.goBackFromCreateGroup} />
+              <CreateNewGroup handleGoBack={this.goBackFromCreateGroup} />
             ) : null}
             {this.state.showUserInfo ? (
               <UserInfo
@@ -324,7 +324,7 @@ class Chat extends Component {
                           </svg>
                         </div>
                         <div
-                          className="container user-menu-icon pointer mx-3"
+                          className="container user-menu-icon pointer mx-2"
                           ref={this.container}
                         >
                           <svg
@@ -343,7 +343,7 @@ class Chat extends Component {
                           {this.state.open && (
                             <div className="dropdown">
                               <ul>
-                                <li>Profile</li>
+                                <li onClick={this.showUserInfo}>Profile</li>
                                 <li>Settings</li>
                                 <li onClick={this.showCreateGroup}>New group</li>
                                 <Link to="/">

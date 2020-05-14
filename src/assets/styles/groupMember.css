@@ -1,0 +1,16 @@
+.group-member-thumbnail {
+  height: 26px;
+  width: fit-content;
+  background-color: #e6e6e6;
+  border-radius: 13px;
+  font-size: 13px;
+}
+
+.remove-group-member {
+  width: 18px;
+  height: 18px;
+}
+
+.remove-group-member:hover {
+  background-color: white;
+}

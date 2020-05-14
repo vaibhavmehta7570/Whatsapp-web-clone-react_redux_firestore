@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import user_default from "../assets/images/users.svg";
+import user_default from "../../assets/images/users.svg";
 
 class ContactForGroup extends Component {
   constructor(props) {
@@ -17,6 +17,7 @@ class ContactForGroup extends Component {
             className="rounded-circle"
             src={this.props.users.profile_pic || user_default}
             height="50px"
+            width="50px"
             alt="contact"
           />
         </div>
