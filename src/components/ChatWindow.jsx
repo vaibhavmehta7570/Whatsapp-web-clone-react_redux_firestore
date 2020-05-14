@@ -61,6 +61,7 @@ class ChatWindow extends Component {
         this.props.userDetails
       );
     }
+    this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
     this.chageInputValueAfterSend();
   };
 

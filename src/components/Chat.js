@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import { db, auth } from "../services/firebase";
 import "../assets/styles/Chat.css";
 import Contact from "./Contact";
 import user_image from "../assets/images/users.svg";
 import { getUsers } from "../actions/contactActions";
+import { Link } from "react-router-dom";
 import ChatWindow from "./ChatWindow";
 import { getAllMessages, addNewMessage } from "../actions/actionOnChatWindow";
 import { getCurrentUser } from "../actions/currentUserActions";
 import UserInfo from "./UserInfo";
 import ContactInfo from "./ContactInfo";
 import NotificationSwitch from "./NotificationSwitch";
+import CreateNewgroup from "./CreateNewGroup";
 
 class Chat extends Component {
   constructor(props) {
@@ -29,6 +30,8 @@ class Chat extends Component {
       showContact: false,
       notificationAlert: false,
       unsubscribeSnapshot: null,
+      showCreateGroupPane: false,
+      showUsersListSidebar: true,
     };
   }
 
@@ -201,11 +204,19 @@ class Chat extends Component {
   };
 
   showUserInfo = () => {
-    this.setState({ showUserInfo: true });
+    this.setState({ showUserInfo: true, showUsersListSidebar: false });
+  };
+
+  showCreateGroup = () => {
+    this.setState({ showCreateGroupPane: true, showUsersListSidebar: false });
   };
 
   goBackToUserList = () => {
-    this.setState({ showUserInfo: false });
+    this.setState({ showUserInfo: false, showUsersListSidebar: true });
+  };
+
+  goBackFromCreateGroup = () => {
+    this.setState({ showCreateGroupPane: false, showUsersListSidebar: true });
   };
 
   showContactInfo = () => {
@@ -260,6 +271,9 @@ class Chat extends Component {
                 : "col-4 chat-side-bar p-0"
             }
           >
+            {this.state.showCreateGroupPane ? (
+              <CreateNewgroup handleGoBack={this.goBackFromCreateGroup} />
+            ) : null}
             {this.state.showUserInfo ? (
               <UserInfo
                 handleGoBack={this.goBackToUserList}
@@ -268,7 +282,8 @@ class Chat extends Component {
                 desc={userDetail.description}
                 profilePic={userDetail.profile_pic}
               />
-            ) : (
+              ) : null}
+              {this.state.showUsersListSidebar ? (
                 <div className="sidebar">
                   <div className="user-detail">
                     <div className="logout-user-dp d-flex justify-content-between p-2">
@@ -330,7 +345,7 @@ class Chat extends Component {
                               <ul>
                                 <li>Profile</li>
                                 <li>Settings</li>
-                                <li>New group</li>
+                                <li onClick={this.showCreateGroup}>New group</li>
                                 <Link to="/">
                                   <li onClick={this.handleSignOut}>Log out</li>
                                 </Link>
@@ -397,7 +412,7 @@ class Chat extends Component {
                     </div>
                   </div>
                 </div>
-              )}
+            ) : null}
           </div>
           {this.state.showChatRoom ? (
             <ChatWindow
