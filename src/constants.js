@@ -1,4 +1,5 @@
 export const FETCH_ALL_MESSAGES = "FETCH_ALL_MESSAGES";
+export const ADD_NEW_MESSAGE = "ADD_NEW_MESSAGE";
 export const GET_USERS = 'GET_USERS';
 export const GET_CURRENT_USER = 'GET_CURRENT_USER';
 export const USER_LOGGED_IN = 'USER_LOGGED_IN';

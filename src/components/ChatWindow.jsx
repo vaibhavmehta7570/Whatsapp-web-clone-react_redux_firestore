@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import "../assets/styles/chatWindow.css";
 import ReceiverCard from "./ReceiverCards";
 import SenderCard from "./SenderCard";
-import { fetchMessages, onSendMessage } from "../actions/actionOnChatWindow";
+import { onSendMessage } from "../actions/actionOnChatWindow";
 import avtarImag from "../assets/images/users.svg";
 
 class ChatWindow extends Component {
@@ -13,6 +13,8 @@ class ChatWindow extends Component {
       message_body: "",
       inputMessage: "",
       email: "",
+      username: "",
+      sender_id: "",
     };
   }
 
@@ -25,16 +27,17 @@ class ChatWindow extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.currentUser && props.currentUser.email !== state.email) {
+    if (props.currentUser && props.currentUser.user_id !== state.sender_id) {
       return {
         email: props.currentUser.email,
+        username: props.currentUser.username,
+        sender_id: props.currentUser.user_id,
       };
     }
     return state;
   }
 
   componentDidMount() {
-    this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
     this.scrollToBottom();
   }
 
@@ -51,8 +54,11 @@ class ChatWindow extends Component {
     if (this.state.message_body.trim().length > 0) {
       this.props.onSendMessage(
         this.state.message_body,
+        this.state.sender_id,
         this.state.email,
-        this.props.newChatDocRef
+        this.state.username,
+        this.props.newChatDocRef,
+        this.props.userDetails
       );
     }
     this.chageInputValueAfterSend();
@@ -60,7 +66,6 @@ class ChatWindow extends Component {
 
   render() {
     const { showContact, userDetails: { profile_pic } = {} } = this.props;
-
     return (
       <div
         className={
@@ -79,6 +84,7 @@ class ChatWindow extends Component {
                 <img
                   src={profile_pic || avtarImag}
                   width="42px"
+                  height="42px"
                   alt="profile pic"
                   className="rounded-circle"
                 />
@@ -108,7 +114,8 @@ class ChatWindow extends Component {
         </div>
         <div className="message-area pb-3">
           {this.props.message.map((message) =>
-            message !== undefined && message.sender_id !== this.state.email ? (
+            message !== undefined &&
+            message.sender_id !== this.state.sender_id ? (
               <ReceiverCard
                 key={message.message_id}
                 message={message.message_body}
@@ -179,6 +186,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { fetchMessages, onSendMessage })(
-  ChatWindow
-);
+export default connect(mapStateToProps, { onSendMessage })(ChatWindow);

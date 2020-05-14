@@ -1,35 +1,26 @@
-import { FETCH_ALL_MESSAGES } from "../constants";
+import { FETCH_ALL_MESSAGES, ADD_NEW_MESSAGE } from "../constants";
 
-export const fetchMessageSuccess = (messageArr) => ({
+const fetchMessageSuccess = (messageArr) => ({
   type: FETCH_ALL_MESSAGES,
   payload: messageArr,
 });
 
-export const fetchMessages = (messages, chatDocRef) => {
+export const addNewMessage = (message) => ({
+  type: ADD_NEW_MESSAGE,
+  payload: message
+})
+
+export const getAllMessages = (chatDocRef) => {
   return async (dispatch) => {
-    try{
+    try {
       chatDocRef
-        .collection("messages")
-        .onSnapshot((doc) => {
-          let mesageArray = [...messages];
-          if (messages.length > 0) {
-            let maxTimestamp = 0;
-            let newMsgObject;
-            doc.forEach((currentObj) => {
-              if (currentObj.data().timestamp > maxTimestamp) {
-                maxTimestamp = currentObj.data().timestamp;
-                newMsgObject = currentObj.data();
-              }
-            });
-            mesageArray.push(newMsgObject);
-            dispatch(fetchMessageSuccess(mesageArray));
-          } else {
-            doc.forEach((message) => {
-              mesageArray.push(message.data());
-            });
-            const sortedMessage = sortMessages(mesageArray);
-            dispatch(fetchMessageSuccess(sortedMessage));
-          }
+        .orderBy("timestamp")
+        .get().then((doc) => {
+          let messageArray = [];
+          doc.forEach((message) => {
+            messageArray.push(message.data());
+          });
+          dispatch(fetchMessageSuccess(messageArray));
         });
     } catch (error) {
       console.log(error.message);
@@ -44,18 +35,32 @@ export const sortMessages = (messageArr) => {
   return messageArr;
 };
 
-export const onSendMessage = (messageBody, email, chatDocRef) => {
+export const onSendMessage = (messageBody, sender_id, sender_email, sender_name, chatDocRef, recipient) => {
   return (dispatch) => {
     try {
-      var docRef = chatDocRef
-        .collection("messages")
-        .doc();
+      const {
+        user_id: recipient_id,
+        username: recipient_name,
+        email: recipient_email
+      } = recipient
 
-      docRef.set({
+      const message = {
         message_body: messageBody,
-        sender_id: email,
-        message_id: docRef.id,
+        sender_id,
+        sender_name,
+        sender_email,
+        recipient_id,
+        recipient_name,
+        recipient_email,
         timestamp: new Date().getTime(),
+      }
+
+      const messageDocRef = chatDocRef
+        .doc()
+
+      messageDocRef.set({
+        ...message,
+        message_id: messageDocRef.id
       });
     } catch (error) {
       console.log(error.message);
