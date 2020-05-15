@@ -17,7 +17,7 @@ class CreateNewGroup extends Component {
     return (
       <>
         {nextPage ? (
-          <AddGroupSubject handleGoBack={this.gotoNextPage} />
+          <AddGroupSubject handleGoBack={this.gotoNextPage} updateProgress={this.props.updateProgress} exitGroupCreation={this.props.handleGoBack} />
         ) : (
           <SelectGroupMembers handleGoBack={this.props.handleGoBack} gotoNextPage={this.gotoNextPage} />
         )}

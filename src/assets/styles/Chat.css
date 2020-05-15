@@ -155,3 +155,11 @@ li:hover {
   height: 83%;
   overflow-y: auto;
 }
+
+.alert {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+}

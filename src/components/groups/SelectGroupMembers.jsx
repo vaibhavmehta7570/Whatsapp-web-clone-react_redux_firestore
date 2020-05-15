@@ -4,6 +4,7 @@ import ContactForGroup from "./ContactForGroup";
 import GroupMember from "./GroupMember";
 import createGroupLogo from "../../assets/images/arrow-right.svg";
 import Header from "./Header";
+import { getGroupMembers } from "../../actions/createGroupAction"
 
 class SelectGroupMembers extends Component {
   constructor(props) {
@@ -65,6 +66,11 @@ class SelectGroupMembers extends Component {
     }));
   };
 
+  submitGroupMembers = () => {
+    this.props.gotoNextPage()
+    this.props.getGroupMembers(this.state.groupMembers)
+  }
+
   render() {
     return (
       <div className="sidebar">
@@ -89,6 +95,7 @@ class SelectGroupMembers extends Component {
               className="group-search mt-2"
               placeholder="Type contact name"
               onChange={this.SearchUser}
+              autoFocus
             />
           </div>
 
@@ -113,7 +120,7 @@ class SelectGroupMembers extends Component {
             {this.state.groupMembers.length > 0 && (
               <div
                 className="create-group p-2 rounded-circle"
-                onClick={this.props.gotoNextPage}
+                onClick={this.submitGroupMembers}
               >
                 <img src={createGroupLogo} alt="create group" />
               </div>
@@ -125,10 +132,14 @@ class SelectGroupMembers extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({users}) => {
   return {
-    users: state.users,
+    users
   };
 };
 
-export default connect(mapStateToProps)(SelectGroupMembers);
+const mapDispatchToProps = dispatch => ({
+  getGroupMembers: groupMembers => dispatch(getGroupMembers(groupMembers))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(SelectGroupMembers);
