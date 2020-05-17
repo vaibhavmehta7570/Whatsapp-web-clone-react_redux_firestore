@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ContactForGroup from "./ContactForGroup";
-import GroupMember from "./GroupMember";
+import GroupMemberCard from "./GroupMemberCard";
 import createGroupLogo from "../../assets/images/arrow-right.svg";
 import Header from "./Header";
 import { getGroupMembers } from "../../actions/createGroupAction"
@@ -83,7 +83,7 @@ class SelectGroupMembers extends Component {
           <div className="search-group-user mt-4 ml-4 mb-3">
             {this.state.groupMembers.map((groupMember) => {
               return (
-                <GroupMember
+                <GroupMemberCard
                   key={groupMember.user_id}
                   user={groupMember}
                   removeMember={this.removeUserFromGroup}

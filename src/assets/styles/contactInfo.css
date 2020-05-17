@@ -8,8 +8,8 @@
   font-size: 14px;
 }
 
-.bottom-border {
-  border-bottom: 1px solid #eee;
+.top-border {
+  border-top: 1px solid #eee;
 }
 
 .border-bottom-card {
@@ -27,6 +27,15 @@
 
 .pointer {
   cursor: pointer;
+}
+
+.description-text {
+  font-size: 14px;
+}
+
+.group-creation-date {
+  font-size: 14px;
+  color: #919191;
 }
 
 ::-webkit-scrollbar {

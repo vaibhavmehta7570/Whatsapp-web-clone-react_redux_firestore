@@ -14,15 +14,23 @@ function messageTime(timestamp) {
 }
 
 function ReceiverCard(props) {
+  const {
+    sender_name: username,
+    message_body: message,
+    timestamp: message_time,
+    group_id,
+  } = props.message;
+
   return (
     <div className="cards mt-2" style={{ backgroundColor: "transparent" }}>
       <span className="rec">
         <img src={traingle} height="15px" width="25px" alt="cone" />
       </span>
       <div className="inner-parent receiver border-bottom-card relative p-1">
-        <span className="receive-msg">{props.message}</span>
+        {group_id && <small className='text-info d-block text-left'>{username}</small>}
+        <span className="receive-msg">{message}</span>
         <span className="message-time relative">
-          {messageTime(props.message_time)}
+          {messageTime(message_time)}
         </span>
       </div>
     </div>

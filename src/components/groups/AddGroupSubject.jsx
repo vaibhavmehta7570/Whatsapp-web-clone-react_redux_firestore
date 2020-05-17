@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { db, storage } from "../../services/firebase";
+import firebase, { db, storage } from "../../services/firebase";
 import Header from "./Header";
 import ImageUploader from "../ImageUploader";
 import gruopIcon from "../../assets/images/group-default-icon.svg";
@@ -47,10 +47,19 @@ class AddGroupSubject extends Component {
     const groupsDocRef = db.collection("groups").doc();
 
     groupsDocRef
-      .set(groupInfo)
+      .set({...groupInfo, group_id: groupsDocRef.id, createdAt: new Date().getTime()})
       .then(() => {
-        this.props.updateProgress("Group created!")
-        this.uploadGroupImage(groupsDocRef);
+        groupInfo.members.forEach(member => {
+          db.doc(`users/${member.user_id}`)
+            .update({
+              groups: firebase.firestore.FieldValue.arrayUnion(groupsDocRef.id),
+            })
+            .then(() => {
+              this.props.updateProgress("Group created!");
+              this.uploadGroupImage(groupsDocRef);
+            })
+            .catch(err => console.error('Error while creating group: ', err));
+        })
       })
       .catch(err => console.error("Error while creating group: ", err));
   };
@@ -66,7 +75,7 @@ class AddGroupSubject extends Component {
       imageLocationRef
         .put(groupImage) // uploads the image to the location
         .then(snapshot => {
-          this.props.updateProgress("Group image uploaded!")
+          this.props.updateProgress("Group image uploaded!");
           imageLocationRef.getDownloadURL().then(imageURL => {
             this.updateGroupPic(groupsDocRef, imageURL);
           });
@@ -76,8 +85,8 @@ class AddGroupSubject extends Component {
         );
     } else {
       setTimeout(() => {
-        this.props.updateProgress("")
-      }, 2000)  // remove the alert after 2 seconds
+        this.props.updateProgress("");
+      }, 2000); // remove the alert after 2 seconds
     }
   };
 
@@ -88,11 +97,11 @@ class AddGroupSubject extends Component {
       })
       .then(() => {
         this.props.getGroupPic(imageURL);
-        this.props.updateProgress("Group image updated!")
-        
+        this.props.updateProgress("Group image updated!");
+
         setTimeout(() => {
-          this.props.updateProgress("")
-        }, 2000)  // remove the alert after 2 seconds
+          this.props.updateProgress("");
+        }, 2000); // remove the alert after 2 seconds
       })
       .catch(err => console.error("Error while updating group image: ", err));
   };

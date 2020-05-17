@@ -13,7 +13,14 @@ import UserInfo from "./UserInfo";
 import ContactInfo from "./ContactInfo";
 import NotificationSwitch from "./NotificationSwitch";
 import CreateNewGroup from "./groups/CreateNewGroup";
-import { getGroupAdmin } from "../actions/createGroupAction"
+import { getGroupAdmin } from "../actions/createGroupAction";
+import { getAllGroups } from "../actions/groupsActions";
+import GroupCard from "./groups/GroupCard";
+import GroupChatWindow from "./groups/GroupChatWindow";
+import {
+  getAllGroupMessages,
+  addNewGroupMessage,
+} from "../actions/groupMessagesActions";
 
 class Chat extends Component {
   constructor(props) {
@@ -34,11 +41,13 @@ class Chat extends Component {
       showCreateGroupPane: false,
       showUsersListSidebar: true,
       groupCreationProgressText: "",
+      showGroupChatWindow: false,
+      currentGroup: null,
     };
   }
 
   handleButtonClick = () => {
-    this.setState((state) => {
+    this.setState(state => {
       return {
         open: !state.open,
       };
@@ -48,63 +57,92 @@ class Chat extends Component {
   componentDidMount() {
     this.checkAuthenticationState();
     document.addEventListener("mousedown", this.handleClickOutside);
-    this.notificationPermission()
+    this.notificationPermission();
   }
 
   notificationPermission() {
     if (!("Notification" in window)) {
-      alert("Your browser doesn't support desktop notifications")
+      alert("Your browser doesn't support desktop notifications");
     } else if (Notification.permission === "default") {
-      this.setState({ notificationAlert: true })
+      this.setState({ notificationAlert: true });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.userToChatWith?.user_id !== prevState.userToChatWith?.user_id) {
-      const { newChatDocRef, userToChatWith, unsubscribeSnapshot } = this.state
+    if (
+      this.state.userToChatWith?.user_id !== prevState.userToChatWith?.user_id
+    ) {
+      const { newChatDocRef, userToChatWith, unsubscribeSnapshot } = this.state;
 
       if (prevState.newChatDocRef === null) {
         this.setState({
-          unsubscribeSnapshot: this.docSnapshot(newChatDocRef, userToChatWith)
-        })
+          unsubscribeSnapshot: this.docSnapshot(newChatDocRef, userToChatWith),
+        });
       } else {
-        unsubscribeSnapshot()
+        unsubscribeSnapshot();
         this.setState({
-          unsubscribeSnapshot: this.docSnapshot(newChatDocRef, userToChatWith)
-        })
+          unsubscribeSnapshot: this.docSnapshot(newChatDocRef, userToChatWith),
+        });
+      }
+    } else if (
+      this.state.currentGroup?.group_id !== prevState.currentGroup?.group_id
+    ) {
+      const {
+        unsubscribeSnapshot,
+        currentGroup: { group_id } = {},
+      } = this.state;
+      const groupMessagesRef = db
+        .collection("groups")
+        .doc(group_id)
+        .collection("messages");
+
+      if (unsubscribeSnapshot) {
+        unsubscribeSnapshot();
+        this.setState({
+          unsubscribeSnapshot: this.docSnapshot(groupMessagesRef),
+        });
+      } else {
+        this.setState({
+          unsubscribeSnapshot: this.docSnapshot(groupMessagesRef),
+        });
       }
     }
   }
 
   docSnapshot = (chatDocRef, userOnActiveChat) => {
     // to avoid first snapshot call that fetches all the existing docs
-    let newDocAdded = false
+    let newDocAdded = false;
     // return a function that can later be called to unsubscribe
-    return chatDocRef
-      .orderBy("timestamp")
-      .onSnapshot(snapshot => {
+    return chatDocRef.orderBy("timestamp").onSnapshot(
+      snapshot => {
         if (newDocAdded) {
-          snapshot.docChanges().forEach((change) => {
+          snapshot.docChanges().forEach(change => {
             if (change.type === "added") {
-              this.props.addNewMessage(change.doc.data());
-              const { sender_id } = change.doc.data()
-              if (sender_id === userOnActiveChat.user_id) {
-                this.sendNotification(change.doc.data())
+              if (userOnActiveChat) {
+                this.props.addNewMessage(change.doc.data());
+                const { sender_id } = change.doc.data();
+                if (sender_id === userOnActiveChat.user_id) {
+                  this.sendNotification(change.doc.data());
+                }
+              } else {
+                this.props.addNewGroupMessage(change.doc.data());
               }
             }
           });
         }
-        newDocAdded = true
-      }, err => {
-        console.error("Looks like an error: ", err)
-      });
-  }
+        newDocAdded = true;
+      },
+      err => {
+        console.error("Looks like an error: ", err);
+      }
+    );
+  };
 
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
-  handleClickOutside = (event) => {
+  handleClickOutside = event => {
     if (
       this.container.current &&
       !this.container.current.contains(event.target)
@@ -116,18 +154,17 @@ class Chat extends Component {
   };
 
   checkAuthenticationState = () => {
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(user => {
       if (user) {
         db.collection("users")
           .doc(user.uid)
           .onSnapshot(
-            (user) => {
+            user => {
               this.props.getCurrentUser(user.data());
               this.getAllUsers();
+              this.getGroupsOfCurrentUser(user.data());
             },
-            (err) => {
-              console.error(`Looks like an error => ${err.message}`);
-            }
+            err => console.error(`Looks like an error => ${err.message}`)
           );
       } else {
         console.log("User is not logged in");
@@ -137,24 +174,41 @@ class Chat extends Component {
   };
 
   getAllUsers = () => {
-    db.collection("users")
-      .onSnapshot((snapshot) => {
+    db.collection("users").onSnapshot(
+      snapshot => {
         const users = [];
-        snapshot.forEach((doc) => {
+        snapshot.forEach(doc => {
           const data = doc.data();
           if (data.user_id !== this.props.currentUser.user_id) {
             users.push(data);
           }
         });
         this.props.getUsers(users);
-      }, (error) => console.log(error))
+      },
+      error => console.log("Looks like an error: ", error)
+    );
+  };
+
+  getGroupsOfCurrentUser = user => {
+    db.collection("groups")
+      .where("membersIdArray", "array-contains", user.user_id)
+      .onSnapshot(
+        snapshot => {
+          const groups = [];
+          snapshot.forEach(doc => {
+            groups.push(doc.data());
+          });
+          this.props.getAllGroups(groups);
+        },
+        err => console.error("Looks like an error: ", err)
+      );
   };
 
   // Search functionality in search contacts
-  handleOnInputChange = (event) => {
+  handleOnInputChange = event => {
     this.setState({ searchString: event.target.value }, () => {
       this.setState((state, props) => ({
-        searchedUsers: props.users.filter((user) =>
+        searchedUsers: props.users.filter(user =>
           user.username
             .toLowerCase()
             .includes(this.state.searchString.toLowerCase())
@@ -167,7 +221,7 @@ class Chat extends Component {
     this.setState({ showArrow: true });
   };
 
-  exitFromSearchBar = (e) => {
+  exitFromSearchBar = e => {
     e.stopPropagation();
     this.setState({ showArrow: false, searchString: "", searchedUsers: null });
   };
@@ -178,12 +232,12 @@ class Chat extends Component {
       .then(() => {
         console.log("Sign Out successful");
       })
-      .catch((err) => {
+      .catch(err => {
         console.log("Sign Out failed", err);
       });
   };
 
-  openChatRoom = (user) => {
+  openChatRoom = user => {
     const chatID = this.createUniqueChatID(this.props.currentUser, user);
     const newChat = db.collection("chats").doc(chatID).collection("messages");
     this.setState({
@@ -191,6 +245,8 @@ class Chat extends Component {
       showChatRoom: true,
       newChatDocRef: newChat,
       bgColor: "grey",
+      showGroupChatWindow: false,
+      currentGroup: null,
     });
     this.props.getAllMessages(newChat);
   };
@@ -210,12 +266,20 @@ class Chat extends Component {
   };
 
   showCreateGroup = () => {
-    this.props.getGroupAdmin(this.props.currentUser)
-    this.setState({ showCreateGroupPane: true, showUsersListSidebar: false, open: false });
+    this.props.getGroupAdmin(this.props.currentUser);
+    this.setState({
+      showCreateGroupPane: true,
+      showUsersListSidebar: false,
+      open: false,
+    });
   };
 
   goBackToUserList = () => {
-    this.setState({ showUserInfo: false, showUsersListSidebar: true, open: false });
+    this.setState({
+      showUserInfo: false,
+      showUsersListSidebar: true,
+      open: false,
+    });
   };
 
   goBackFromCreateGroup = () => {
@@ -234,7 +298,7 @@ class Chat extends Component {
     });
   };
 
-  activeContact = (user) => {
+  activeContact = user => {
     return this.state.userToChatWith?.user_id === user.user_id ? "active" : "";
   };
 
@@ -242,28 +306,47 @@ class Chat extends Component {
     if ("Notification" in window && Notification.permission === "granted") {
       const options = {
         body,
-      }
-      const notification = new Notification(title, options)
+      };
+      const notification = new Notification(title, options);
       setTimeout(() => {
-        notification.close()
-      }, 3333) // close notification after 3333 miliseconds
+        notification.close();
+      }, 3333); // close notification after 3333 miliseconds
     }
-  }
+  };
 
   handleNotificationPermission = () => {
     Notification.requestPermission().then(permission => {
       if (permission === "granted") {
-        this.setState({ notificationAlert: false })
-        console.log("You have allowed desktop notifications")
+        this.setState({ notificationAlert: false });
+        console.log("You have allowed desktop notifications");
       } else if (permission === "denied") {
-        this.setState({ notificationAlert: false })
-        console.log("You have blocked desktop notification")
+        this.setState({ notificationAlert: false });
+        console.log("You have blocked desktop notification");
       }
-    })
-  }
+    });
+  };
 
   updateGroupCreationProgress = progress => {
-    this.setState({groupCreationProgressText: progress})
+    this.setState({ groupCreationProgressText: progress });
+  };
+
+  openGroupChatWindow = group => {
+    this.props.getAllGroupMessages(group);
+
+    this.setState({
+      showGroupChatWindow: true,
+      showChatRoom: false,
+      currentGroup: group,
+      userToChatWith: null,
+    });
+  };
+
+  hideGroupChatWindow = () => {
+    this.setState({
+      showChatRoom: false,
+      showGroupChatWindow: false,
+      showContact: false,
+    })
   }
 
   render() {
@@ -279,7 +362,10 @@ class Chat extends Component {
             }
           >
             {this.state.showCreateGroupPane ? (
-              <CreateNewGroup handleGoBack={this.goBackFromCreateGroup} updateProgress={this.updateGroupCreationProgress} />
+              <CreateNewGroup
+                handleGoBack={this.goBackFromCreateGroup}
+                updateProgress={this.updateGroupCreationProgress}
+              />
             ) : null}
             {this.state.showUserInfo ? (
               <UserInfo
@@ -376,11 +462,11 @@ class Chat extends Component {
                           onClick={this.exitFromSearchBar}
                         ></i>
                       ) : (
-                          <i
-                            className="fa fa-search ml-4 mr-3 mt-2 light-"
-                            style={{ cursor: "pointer", color: "#919191" }}
-                          ></i>
-                        )}
+                        <i
+                          className="fa fa-search ml-4 mr-3 mt-2 light-"
+                          style={{ cursor: "pointer", color: "#919191" }}
+                        ></i>
+                      )}
                       <input
                         type="text"
                         placeholder="Search or start a new chat"
@@ -393,37 +479,45 @@ class Chat extends Component {
                   <div className="user-list-container">
                     <div className="user_list">
                       {this.state.searchedUsers
-                        ? this.state.searchedUsers.map((user) => {
-                          const activeContact = this.activeContact(user);
-                          return (
-                            <Contact
-                              key={user.user_id}
-                              users={user}
-                              onClickUser={this.openChatRoom}
-                              active={activeContact}
-                            />
-                          );
-                        })
-                        : this.props.users.map((user) => {
-                          const activeContact = this.activeContact(user);
-                          return (
-                            <Contact
-                              key={user.user_id}
-                              users={user}
-                              onClickUser={this.openChatRoom}
-                              active={activeContact}
-                            />
-                          );
-                        })}
+                        ? this.state.searchedUsers.map(user => {
+                            const activeContact = this.activeContact(user);
+                            return (
+                              <Contact
+                                key={user.user_id}
+                                users={user}
+                                onClickUser={this.openChatRoom}
+                                active={activeContact}
+                              />
+                            );
+                          })
+                        : this.props.users.map(user => {
+                            const activeContact = this.activeContact(user);
+                            return (
+                              <Contact
+                                key={user.user_id}
+                                users={user}
+                                onClickUser={this.openChatRoom}
+                                active={activeContact}
+                              />
+                            );
+                          })}
+                      {this.props.groups.map(group => (
+                        <GroupCard
+                          key={group.group_id}
+                          group={group}
+                          openGroupChatWindow={this.openGroupChatWindow}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
             ) : null}
-            //! Alert to show group creation progress
-            {this.state.groupCreationProgressText && <div class="alert alert-dark py-2" role="alert">
-              {this.state.groupCreationProgressText}
-            </div>}
+            {this.state.groupCreationProgressText && (
+              <div className="alert alert-dark custom-alert py-2" role="alert">
+                {this.state.groupCreationProgressText}
+              </div>
+            )}
           </div>
           {this.state.showChatRoom ? (
             <ChatWindow
@@ -433,21 +527,31 @@ class Chat extends Component {
               showContactInfo={this.showContactInfo}
               showContact={this.state.showContact}
             />
+          ) : this.state.showGroupChatWindow ? (
+            <GroupChatWindow
+              group={this.state.currentGroup}
+              currentUser={this.props.currentUser}
+              showGroupInfo={this.showContactInfo}
+              showGroup={this.state.showContact}
+            />
           ) : (
-              <div className="col-8 chat-window before-chat">
-                <div className="welcome-image ml-6 mb-2"></div>
-                <h3 style={{ color: "#525252" }}>Keep your phone connected</h3>
-                <p>
-                  WhatsApp connects to your phone to sync messages. To reduce data
+            <div className="col-8 chat-window before-chat">
+              <div className="welcome-image ml-6 mb-2"></div>
+              <h3 style={{ color: "#525252" }}>Keep your phone connected</h3>
+              <p>
+                WhatsApp connects to your phone to sync messages. To reduce data
                 <br />
                 usage, connect your phone to Wi-Fi.
               </p>
-              </div>
-            )}
+            </div>
+          )}
           {this.state.showContact && (
             <ContactInfo
               user={this.state.userToChatWith}
               hideContactInfo={this.hideContactInfo}
+              group={this.state.currentGroup}
+              currentUser={this.props.currentUser}
+              hideGroupChatWindow={this.hideGroupChatWindow}
             />
           )}
         </div>
@@ -456,21 +560,25 @@ class Chat extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     users: state.users,
     currentUser: state.currentUser,
     message: state.chats.message,
+    groups: state.groups,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    getUsers: (data) => dispatch(getUsers(data)),
-    getCurrentUser: (data) => dispatch(getCurrentUser(data)),
-    getAllMessages: (docRef) => dispatch(getAllMessages(docRef)),
-    addNewMessage: (message) => dispatch(addNewMessage(message)),
+    getUsers: data => dispatch(getUsers(data)),
+    getCurrentUser: data => dispatch(getCurrentUser(data)),
+    getAllMessages: docRef => dispatch(getAllMessages(docRef)),
+    addNewMessage: message => dispatch(addNewMessage(message)),
     getGroupAdmin: admin => dispatch(getGroupAdmin(admin)),
+    getAllGroups: groups => dispatch(getAllGroups(groups)),
+    getAllGroupMessages: group => dispatch(getAllGroupMessages(group)),
+    addNewGroupMessage: message => dispatch(addNewGroupMessage(message)),
   };
 };
 

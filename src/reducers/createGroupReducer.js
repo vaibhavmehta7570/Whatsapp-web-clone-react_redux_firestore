@@ -2,6 +2,7 @@ import { GET_GROUP_MEMBERS, GET_GROUP_ADMIN, GET_GROUP_NAME, GET_GROUP_PIC } fro
 
 const initialState = {
   members: [],
+  membersIdArray: [],
   admins: [],
   groupName: "",
   group_pic: "",
@@ -12,15 +13,17 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case GET_GROUP_ADMIN:
       return {
-        ...state,
-        admins: [...state.admins,action.payload],
-        members: [...state.members, action.payload],
+        ...initialState,
+        admins: [action.payload.user_id],
+        members: [action.payload],
+        membersIdArray: [action.payload.user_id]
       };
 
     case GET_GROUP_MEMBERS:
       return {
         ...state,
-        members: [...state.members, ...action.payload]
+        members: [...state.members, ...action.payload.groupMembers],
+        membersIdArray: [...state.membersIdArray, ...action.payload.membersIdArray]
       };
 
     case GET_GROUP_NAME:
