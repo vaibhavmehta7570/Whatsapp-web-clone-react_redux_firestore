@@ -109,4 +109,5 @@
 
 .pic-container:hover .fake-hover-div {
   display: flex;
+  padding-top: 35px;
 }

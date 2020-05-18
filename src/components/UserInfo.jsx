@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import "../assets/styles/userInfo.css";
-import userIcon from "../assets/images/users.svg";
-import cameraIcon from "../assets/images/camera-solid.svg";
 import { db } from "../services/firebase";
+import { storage } from "../services/firebase";
+import userIcon from "../assets/images/users.svg";
+import ImageUploader from "./ImageUploader";
 
 class UserInfo extends Component {
   constructor(props) {
@@ -12,6 +13,8 @@ class UserInfo extends Component {
       editUserDescription: false,
       userName: "",
       description: "",
+      image: "",
+      imageURL: null,
     };
   }
 
@@ -58,6 +61,44 @@ class UserInfo extends Component {
       });
     this.setState({ editUserDescription: false });
   };
+  changeProfilePic = (event) => {
+    console.log(event.target.files[0]);
+    let imageName = event.target.files[0].name;
+    this.setState({ image: event.target.files[0] }, () => {
+      this.uploadProfilePicToStorage(imageName);
+    });
+  };
+
+  uploadProfilePicToStorage = async (image_name) => {
+    var storageRef = storage.ref();
+    var imageLoc = storageRef.child(
+      `profilePic/${this.props.id}/${image_name}`
+    );
+    let snapshot = await imageLoc.put(this.state.image);
+    console.log(snapshot);
+    let imgURL = await storageRef
+      .child(snapshot.metadata.fullPath)
+      .getDownloadURL();
+    console.log(imgURL);
+    this.setState({ imageURL: imgURL }, () => {
+      this.updateProfilePic();
+    });
+  };
+  updateProfilePic = () => {
+    console.log(this.state.imageURL);
+    var dbRef = db.collection("users").doc(this.props.id);
+    dbRef
+      .update({
+        profile_pic: this.state.imageURL,
+      })
+      .then(function () {
+        console.log("profile pic successfully updated!");
+      })
+      .catch(function (error) {
+        console.error("Error updating profile pic: ", error);
+      });
+  };
+
   render() {
     return (
       <div className="sidebar">
@@ -80,24 +121,11 @@ class UserInfo extends Component {
           </div>
         </header>
         <div className="profile-body">
-          <div className="profile-pic-container">
-            <div className="pic-container">
-              <div className="fake-hover-div rounded-circle flex-column align-items-center justify-content-center">
-                <img src={cameraIcon} alt="camera icon" width="20px" />
-                <p className="text-white w-50 mt-3">CHANGE PROFILE PHOTO</p>
-              </div>
-              <input
-                type="file"
-                accept="image/gif,image/jpeg,image/jpg,image/png"
-                className="select-file pointer"
-              ></input>
-              <img
-                src={this.props.profilePic || userIcon}
-                className="profile-image rounded-circle"
-                alt="profile pic"
-              />
-            </div>
-          </div>
+          <ImageUploader
+            textContent="CHANGE PROFILE PHOTO"
+            changePic={this.changeProfilePic}
+            imageSrc={this.props.profilePic || userIcon}
+          />
           <div className="profile-user-name">
             {/* class for name*/}
             <div className="your-name-text">Your Name</div>

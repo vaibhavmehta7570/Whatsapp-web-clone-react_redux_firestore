@@ -14,15 +14,17 @@ function messageTime(timestamp) {
 }
 
 function SenderCard(props) {
+  const { message_body: message, timestamp: message_time } = props.message;
+
   return (
     <div
       className="cards card-sender mt-2"
       style={{ backgroundColor: "transparent" }}
     >
       <div className="inner-parent sender border-bottom-card relative p-1">
-        <span className="sender-msg">{props.message}</span>
+        <span className="sender-msg">{message}</span>
         <span className="message-time relative">
-          {messageTime(props.message_time)}
+          {messageTime(message_time)}
         </span>
       </div>
       <span className="sen">

@@ -1,76 +1,49 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import "../assets/styles/chatWindow.css";
-import ReceiverCard from "./ReceiverCards";
-import SenderCard from "./SenderCard";
-import { onSendMessage } from "../actions/actionOnChatWindow";
-import avtarImag from "../assets/images/users.svg";
+import "../../assets/styles/chatWindow.css";
+import ReceiverCard from "../ReceiverCards";
+import SenderCard from "../SenderCard";
+import groupIcon from "../../assets/images/group-default-icon.svg";
+import { sendMessage } from "../../actions/groupMessagesActions";
 
 class ChatWindow extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      message_body: "",
-      inputMessage: "",
-      email: "",
-      username: "",
-      sender_id: "",
-    };
-  }
-
-  scrollToBottom = () => {
-    this.messagesEnd.scrollIntoView();
+  state = {
+    message_body: "",
   };
-
-  componentDidUpdate() {
-    this.scrollToBottom();
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    if (props.currentUser && props.currentUser.user_id !== state.sender_id) {
-      return {
-        email: props.currentUser.email,
-        username: props.currentUser.username,
-        sender_id: props.currentUser.user_id,
-      };
-    }
-    return state;
-  }
 
   componentDidMount() {
-    this.scrollToBottom();
+    this.belowLastMessage.scrollIntoView();
   }
 
-  handleOnchange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+  componentDidUpdate() {
+    this.belowLastMessage.scrollIntoView();
+  }
+  
+
+  handleChange = event => {
+    this.setState({ message_body: event.target.value });
   };
 
-  chageInputValueAfterSend = () => {
-    this.setState({ message_body: "" });
-  };
-
-  sendMessage = (event) => {
+  sendMessageToGroup = event => {
     event.preventDefault();
-    if (this.state.message_body.trim().length > 0) {
-      this.props.onSendMessage(
-        this.state.message_body,
-        this.state.sender_id,
-        this.state.email,
-        this.state.username,
-        this.props.newChatDocRef,
-        this.props.userDetails
-      );
-    }
-    // this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
-    this.chageInputValueAfterSend();
+    this.setState({ message_body: "" });
+    const { currentUser, group } = this.props;
+    const { message_body } = this.state;
+    sendMessage(currentUser, group, message_body);
   };
 
   render() {
-    const { showContact, userDetails: { profile_pic } = {} } = this.props;
+    const {
+      currentUser,
+      showGroup,
+      group: { group_pic, groupName } = {},
+    } = this.props;
+    const { message_body } = this.state;
+
     return (
       <div
         className={
-          showContact
+          showGroup
             ? "col-lg-6 col-md-5 chat-window col-sm-hide"
             : "col-8 chat-window"
         }
@@ -79,11 +52,11 @@ class ChatWindow extends Component {
           <nav className="navbar">
             <div
               className="d-flex align-items-center pointer"
-              onClick={this.props.showContactInfo}
+              onClick={this.props.showGroupInfo}
             >
               <div className="user-image">
                 <img
-                  src={profile_pic || avtarImag}
+                  src={group_pic || groupIcon}
                   width="42px"
                   height="42px"
                   alt="profile pic"
@@ -91,7 +64,7 @@ class ChatWindow extends Component {
                 />
               </div>
               <div className="user-name ml-3">
-                <span>{this.props.userDetails.username}</span>
+                <span>{groupName}</span>
               </div>
             </div>
             <div className="d-flex">
@@ -114,9 +87,9 @@ class ChatWindow extends Component {
           </nav>
         </div>
         <div className="message-area pb-3">
-          {this.props.message.map((message) =>
+          {this.props.groupMessages.map(message =>
             message !== undefined &&
-            message.sender_id !== this.state.sender_id ? (
+            message.sender_id !== currentUser.user_id ? (
               <ReceiverCard
                 key={message.message_id}
                 message={message}
@@ -131,14 +104,14 @@ class ChatWindow extends Component {
           <div
             className="auto-scroll"
             style={{ float: "left", clear: "both" }}
-            ref={(el) => {
-              this.messagesEnd = el;
+            ref={element => {
+              this.belowLastMessage = element;
             }}
           ></div>
         </div>
         <div className="footer-bar">
           <footer claassname="footer-bar">
-            <form onSubmit={this.sendMessage}>
+            <form onSubmit={this.sendMessageToGroup}>
               <div className="footer-content">
                 <div className="emoji-icon">
                   <button className="footer-icon" type="button">
@@ -150,8 +123,8 @@ class ChatWindow extends Component {
                     type="text"
                     className="form-control message-input"
                     name="message_body"
-                    value={this.state.message_body}
-                    onChange={this.handleOnchange}
+                    value={message_body}
+                    onChange={this.handleChange}
                     placeholder="Type a message..."
                   />
                 </div>
@@ -176,10 +149,11 @@ class ChatWindow extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
+
+const mapStateToProps = ({ groupMessages }) => {
   return {
-    message: state.chats.message,
+    groupMessages,
   };
 };
 
-export default connect(mapStateToProps, { onSendMessage })(ChatWindow);
+export default connect(mapStateToProps)(ChatWindow);

@@ -36,7 +36,6 @@ export const sortMessages = (messageArr) => {
 };
 
 export const onSendMessage = (messageBody, sender_id, sender_email, sender_name, chatDocRef, recipient) => {
-  return (dispatch) => {
     try {
       const {
         user_id: recipient_id,
@@ -65,5 +64,4 @@ export const onSendMessage = (messageBody, sender_id, sender_email, sender_name,
     } catch (error) {
       console.log(error.message);
     }
-  };
 };

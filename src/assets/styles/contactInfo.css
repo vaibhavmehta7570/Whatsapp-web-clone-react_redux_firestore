@@ -8,8 +8,8 @@
   font-size: 14px;
 }
 
-.bottom-border {
-  border-bottom: 1px solid #eee;
+.top-border {
+  border-top: 1px solid #eee;
 }
 
 .border-bottom-card {
@@ -27,6 +27,29 @@
 
 .pointer {
   cursor: pointer;
+}
+
+.description-text {
+  font-size: 14px;
+}
+
+.group-creation-date {
+  font-size: 14px;
+  color: #919191;
+}
+
+.add-members,
+.invite-via-link {
+  background-color: #009688;
+  width: 50px;
+  height: 50px  ;
+}
+
+.admin-badge {
+  border: 1px solid #07BC4C;
+  border-radius: 3px;
+  font-size: 10px;
+  color: #07BC4C;
 }
 
 ::-webkit-scrollbar {

@@ -1,13 +1,22 @@
 import { combineReducers } from 'redux';
 import chatWindowReducer from "./chatWindowReducers";
 import contactReducer from './contactReducer';
-import currentUser from './currentUserReducer'
-import auth from './authReducer'
+import currentUser from './currentUserReducer';
+import auth from './authReducer';
+import groupInfo from './createGroupReducer';
+import groups from './groupsReducer'
+import groupMessages from './groupMessagesReducers'
+import searchedGroupMembers from './searchGroupMembersReducer'
 
 const rootReducer = combineReducers({
-	users: contactReducer,
+  users: contactReducer,
   chats: chatWindowReducer,
   currentUser,
-  auth
+  auth,
+  groupInfo,
+  groups,
+  groupMessages,
+  searchedGroupMembers,
 });
+
 export default rootReducer;

@@ -53,7 +53,7 @@ class Contact extends Component {
               alt="contact"
             />
         </div>
-        <div className="d-flex align-items-center w-100 ml-3 bottom-border">
+        <div className="d-flex align-items-center w-100 ml-3 top-border">
           <span>{this.props.users.username}</span>
         </div>
         <div className="container-drop align-items-center" ref={this.container}>

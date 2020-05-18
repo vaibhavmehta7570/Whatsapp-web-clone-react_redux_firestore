@@ -1,0 +1,65 @@
+.group-pane-body {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 83%;
+}
+
+.search-group-user {
+  text-align: left;
+}
+
+.group-search {
+  border: none;
+  border-bottom: 1px solid #d9d9d9;
+  width: 100%;
+  font-size: 15px;
+  padding-bottom: 10px;
+}
+
+.group-search::placeholder {
+  color: #a7a7a7;
+}
+
+.group-search:focus {
+  outline: none;
+}
+
+.group-contact-list {
+  overflow-y: auto;
+}
+
+.create-group-container {
+  background-color: #e6e6e6;
+  padding: 28px 0 32px 0;
+}
+
+.create-group-btn,
+.create-group-btn:focus {
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.create-group {
+  background-color: #09e85e;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  animation: scale ease 200ms;
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.group-name-input {
+  width: 90%;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid #00bfa5;
+  background: transparent;
+}
