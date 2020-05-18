@@ -470,7 +470,7 @@ class Chat extends Component {
                       <input
                         type="text"
                         placeholder="Search or start a new chat"
-                        className=" form-control search"
+                        className="form-control search"
                         value={this.state.searchString}
                         onChange={this.handleOnInputChange}
                       />

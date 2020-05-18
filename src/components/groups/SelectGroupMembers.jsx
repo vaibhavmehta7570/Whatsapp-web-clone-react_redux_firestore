@@ -19,7 +19,7 @@ class SelectGroupMembers extends Component {
   }
 
   componentDidMount() {
-    let userArr = this.props.users;
+    let userArr = [...this.props.users];
     this.setState({ sortedUsers: this.sortUsers(userArr) });
   }
 

@@ -6,6 +6,7 @@ import auth from './authReducer';
 import groupInfo from './createGroupReducer';
 import groups from './groupsReducer'
 import groupMessages from './groupMessagesReducers'
+import searchedGroupMembers from './searchGroupMembersReducer'
 
 const rootReducer = combineReducers({
   users: contactReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   groupInfo,
   groups,
   groupMessages,
+  searchedGroupMembers,
 });
 
 export default rootReducer;

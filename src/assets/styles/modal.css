@@ -1,0 +1,95 @@
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.add-members-modal {
+  width: 436px;
+  background-color: #ededed;
+  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, .24), 0 17px 50px 0 rgba(0, 0, 0, .19);
+  border-radius: 4px;
+  font-size: 1.2rem;
+  overflow: hidden;
+}
+
+.add-participants {
+  background-color: #009688;
+  color: #fff;
+}
+
+.search-input-div {
+  background-color: #fff;
+  height: 36px;
+  border-radius: 18px;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  height: 36px;
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: lighter;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.contact-list {
+  height: 404px;
+  position: relative;
+}
+
+.contacts-container {
+  overflow-y: auto;
+}
+
+.contact-list-header {
+  background-color: #fff;
+  color: #009688;
+  font-size: 16px;
+}
+
+.seperator {
+  background-color: #fff;
+}
+
+.member-details {
+  background-color: #fff;
+  height: 70px;
+}
+
+.member-details:hover {
+  background-color: #f5f5f5;
+}
+
+.add-members-btn,
+.add-members-btn:focus {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+}
+
+.add-group-members {
+  background-color: #09e85e;
+  padding: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  animation: scale ease 200ms;
+}
+
+@keyframes scale {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

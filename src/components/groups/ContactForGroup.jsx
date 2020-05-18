@@ -9,7 +9,7 @@ class ContactForGroup extends Component {
   render() {
     return (
       <div
-        className={`container-contact users ${this.props.active}`}
+        className="container-contact users"
         onClick={() => this.props.onClickUser(this.props.users)}
       >
         <div className="user-dp  d-flex align-items-center ml-2">

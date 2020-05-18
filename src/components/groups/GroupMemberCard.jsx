@@ -5,7 +5,7 @@ import "../../assets/styles/groupMemberCard.css";
 
 function GroupMemberCard({ user, removeMember }) {
   return (
-    <div className="group-member-thumbnail my-1 d-flex align-items-center">
+    <div className="group-member-thumbnail my-1 mr-1 d-flex align-items-center">
       <img
         className="rounded-circle"
         src={user.profile_pic || userIcon}
