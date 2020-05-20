@@ -70,7 +70,7 @@ class Modal extends Component {
 
   addMemberToGroup = () => {
     const { selectedMembers } = this.state;
-    const { group_id, hideWindow } = this.props;
+    const { group_id, exitModal } = this.props;
     const membersIDs = selectedMembers.map(member => member.user_id);
 
     db.doc(`groups/${group_id}`)
@@ -79,8 +79,7 @@ class Modal extends Component {
         membersIdArray: firebase.firestore.FieldValue.arrayUnion(...membersIDs),
       })
       .then(() => {
-        console.log("Members added successfully");
-        hideWindow()
+          exitModal();
       })
       .catch(err => console.error("Members not added: ", err));
   };

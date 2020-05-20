@@ -15,7 +15,6 @@ import NotificationSwitch from "./NotificationSwitch";
 import CreateNewGroup from "./groups/CreateNewGroup";
 import { getGroupAdmin } from "../actions/createGroupAction";
 import { getAllGroups } from "../actions/groupsActions";
-import GroupCard from "./groups/GroupCard";
 import GroupChatWindow from "./groups/GroupChatWindow";
 import {
   getAllGroupMessages,
@@ -43,6 +42,8 @@ class Chat extends Component {
       groupCreationProgressText: "",
       showGroupChatWindow: false,
       currentGroup: null,
+      unsubscribeGroupDoc: null,
+      unsubscribeUserDoc: null,
     };
   }
 
@@ -74,16 +75,12 @@ class Chat extends Component {
     ) {
       const { newChatDocRef, userToChatWith, unsubscribeSnapshot } = this.state;
 
-      if (prevState.newChatDocRef === null) {
-        this.setState({
-          unsubscribeSnapshot: this.docSnapshot(newChatDocRef, userToChatWith),
-        });
-      } else {
+      if (unsubscribeSnapshot) {
         unsubscribeSnapshot();
-        this.setState({
-          unsubscribeSnapshot: this.docSnapshot(newChatDocRef, userToChatWith),
-        });
       }
+      this.setState({
+        unsubscribeSnapshot: this.docSnapshot(newChatDocRef, userToChatWith),
+      });
     } else if (
       this.state.currentGroup?.group_id !== prevState.currentGroup?.group_id
     ) {
@@ -98,14 +95,10 @@ class Chat extends Component {
 
       if (unsubscribeSnapshot) {
         unsubscribeSnapshot();
-        this.setState({
-          unsubscribeSnapshot: this.docSnapshot(groupMessagesRef),
-        });
-      } else {
-        this.setState({
-          unsubscribeSnapshot: this.docSnapshot(groupMessagesRef),
-        });
       }
+      this.setState({
+        unsubscribeSnapshot: this.docSnapshot(groupMessagesRef),
+      });
     }
   }
 
@@ -240,13 +233,23 @@ class Chat extends Component {
   openChatRoom = (user) => {
     const chatID = this.createUniqueChatID(this.props.currentUser, user);
     const newChat = db.collection("chats").doc(chatID).collection("messages");
+    if (this.state.unsubscribeUserDoc) {
+      this.state.unsubscribeUserDoc();
+    }
     this.setState({
-      userToChatWith: user,
-      showChatRoom: true,
-      newChatDocRef: newChat,
-      bgColor: "grey",
-      showGroupChatWindow: false,
-      currentGroup: null,
+      unsubscribeUserDoc: db
+        .collection("users")
+        .doc(user.user_id)
+        .onSnapshot(snapshot => {
+          const userToChatWith = snapshot.data()
+          this.setState({
+            userToChatWith,
+            showChatRoom: true,
+            newChatDocRef: newChat,
+            showGroupChatWindow: false,
+            currentGroup: null,
+          });
+        }),
     });
     this.props.getAllMessages(newChat);
   };
@@ -333,11 +336,22 @@ class Chat extends Component {
   openGroupChatWindow = (group) => {
     this.props.getAllGroupMessages(group);
 
+    if (this.state.unsubscribeGroupDoc) {
+      this.state.unsubscribeGroupDoc();
+    }
     this.setState({
-      showGroupChatWindow: true,
-      showChatRoom: false,
-      currentGroup: group,
-      userToChatWith: null,
+      unsubscribeGroupDoc: db
+        .collection("groups")
+        .doc(group.group_id)
+        .onSnapshot(snapshot => {
+          const currentGroup = snapshot.data();
+          this.setState({
+            showGroupChatWindow: true,
+            showChatRoom: false,
+            currentGroup,
+            userToChatWith: null,
+          });
+        }),
     });
   };
 
@@ -484,8 +498,8 @@ class Chat extends Component {
                             return (
                               <Contact
                                 key={user.user_id}
-                                users={user}
-                                onClickUser={this.openChatRoom}
+                                user={user}
+                                openChatWindow={this.openChatRoom}
                                 active={activeContact}
                               />
                             );
@@ -495,17 +509,17 @@ class Chat extends Component {
                             return (
                               <Contact
                                 key={user.user_id}
-                                users={user}
-                                onClickUser={this.openChatRoom}
+                                user={user}
+                                openChatWindow={this.openChatRoom}
                                 active={activeContact}
                               />
                             );
                           })}
-                      {this.props.groups.map((group) => (
-                        <GroupCard
+                      {this.props.groups.map(group => (
+                        <Contact
                           key={group.group_id}
                           group={group}
-                          openGroupChatWindow={this.openGroupChatWindow}
+                          openChatWindow={this.openGroupChatWindow}
                         />
                       ))}
                     </div>
@@ -551,7 +565,6 @@ class Chat extends Component {
               hideContactInfo={this.hideContactInfo}
               group={this.state.currentGroup}
               currentUser={this.props.currentUser}
-              hideGroupChatWindow={this.hideGroupChatWindow}
             />
           )}
         </div>

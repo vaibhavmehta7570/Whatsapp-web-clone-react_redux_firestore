@@ -18,6 +18,7 @@ import "../assets/styles/contactInfo.css";
 import Modal from "./groups/Modal";
 import ImageUploader from "./ImageUploader";
 
+<!-- <<<<<<< feature/group/new -->
 class ContactInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -32,6 +33,27 @@ class ContactInfo extends React.Component {
       editGroupDescription: "",
     };
   }
+// =======
+// const ContactInfo = ({
+//   user,
+//   group,
+//   hideContactInfo,
+//   currentUser,
+//   hideGroupChatWindow,
+//   openGroupChatWindow,
+// }) => {
+//   const { username, email, description: bio, profile_pic } = user || {};
+//   const {
+//     groupName,
+//     description,
+//     group_pic,
+//     admins,
+//     members,
+//     membersIdArray,
+//     createdAt,
+//     group_id,
+//   } = group || {};
+// >>>>>>> feature/Groups
 
   changeProfilePic = (event) => {
     let imageName = event.target.files[0].name;
@@ -315,11 +337,36 @@ class ContactInfo extends React.Component {
                   No media, Links and Docs
                 </div>
               </div>
+<!-- <<<<<<< feature/group/new -->
               <div className="bg-white pl-4 mb-2 text-left">
                 <div className="py-3 d-flex justify-content-between align-items-center">
                   <span>Mute Notification</span>
                   <input className="mr-4" type="checkbox" />
                 </div>
+<!-- =======
+            )}
+            <div className="bg-white py-3 mb-2">
+              <div className="text-left green-text px-4 d-flex justify-content-between">
+                <span>Media, Links and Docs</span>
+                <img src={arrowIcon} alt="click to see media, links and docs" />
+              </div>
+              <div className="media-content p-4">No media, Links and Docs</div>
+            </div>
+            <div className="bg-white pl-4 mb-2 text-left">
+              <div className="py-3 d-flex justify-content-between align-items-center">
+                <span>Mute Notification</span>
+                <input className="mr-4" type="checkbox" />
+              </div>
+              <div className="py-3 d-flex justify-content-between top-border">
+                <span>Starred Messages</span>
+                <img
+                  className="mr-4"
+                  src={arrowIcon}
+                  alt="click to see starred messages"
+<!--                 /> -->
+              </div>
+               {group && (
+// >>>>>>> feature/Groups -->
                 <div className="py-3 d-flex justify-content-between top-border">
                   <span>Starred Messages</span>
                   <img

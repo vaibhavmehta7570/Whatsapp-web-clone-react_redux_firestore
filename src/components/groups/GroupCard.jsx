@@ -29,7 +29,7 @@ class Contact extends Component {
     return (
       <div
         className={`container-contact users`}
-        onClick={() => this.props.openGroupChatWindow(this.props.group)}
+        onClick={() => this.props.openChatWindow(this.props.group)}
       >
         <div className="user-dp  d-flex align-items-center ml-2">
           <img

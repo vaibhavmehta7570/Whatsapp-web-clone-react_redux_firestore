@@ -8,8 +8,8 @@ const Home = () => {
     <div>
       <Navbar />
       <div className="container">
-        <div className="row">
-          <div className="col-8">
+        <div className="row container-row d-flex align-items-center text-center">
+          <div className="col-md-8 col-6">
             <h1 className="title-english">
               Welcome to the world of social networking
             </h1>
@@ -17,11 +17,11 @@ const Home = () => {
               सोशल नेटवर्किंग की दुनिया में आपका स्वागत है
             </div>
           </div>
-          <div className="col-4">
+          <div className="col-md-4 col-6">
             <img src={logo} alt="logo" className="main-logo" />
           </div>
         </div>
-        <footer className="footer">
+        <footer className="footer text-left">
           <p>
             Mountblue <i className="far fa-copyright blue"></i> Created with{" "}
             <i className="far fa-heart pink"></i> by{" "}

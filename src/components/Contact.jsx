@@ -1,62 +1,69 @@
 import React, { Component } from "react";
 import user_default from "../assets/images/users.svg";
+import group_default from "../assets/images/group-default-icon.svg";
 import "../assets/styles/Chat.css";
 
 class Contact extends Component {
   constructor(props) {
     super(props);
-    this.container = React.createRef();
     this.state = {
-      contactArrowOpen: false,
+      showDropdown: false,
     };
   }
 
-  componentDidMount() {
-    document.addEventListener("mousedown", this.handleClickOutside);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("mousedown", this.handleClickOutside);
-  }
-
-  handleClickOutside = (event) => {
-    if (
-      this.container.current &&
-      !this.container.current.contains(event.target)
-    ) {
-      this.setState({
-        contactArrowOpen: false,
-      });
-    }
-  };
-
   handleButtonClick = () => {
-    this.setState((state) => {
+    this.setState(state => {
       return {
-        contactArrowOpen: !state.contactArrowOpen,
+        showDropdown: !state.showDropdown,
       };
     });
   };
 
+  hideDropdown = () => {
+    this.setState(state => {
+      return {
+        showDropdown: false,
+      };
+    });
+  };
+
+  handleClick = () => {
+    const { user, group, openChatWindow } = this.props
+    if (user) {
+      openChatWindow(user)
+    } else if (group) {
+      openChatWindow(group)
+    }
+  }
+
   render() {
+    const { user, group } = this.props;
+    const { profile_pic, username } = user || {};
+    const { groupName, group_pic } = group || {};
+    const default_pic = user ? user_default : group_default;
+
     return (
       <div
         className={`container-contact users ${this.props.active}`}
-        onClick={() => this.props.onClickUser(this.props.users)}
+        onClick={this.handleClick}
       >
         <div className="user-dp  d-flex align-items-center ml-2">
-            <img
-              className="rounded-circle"
-              src={this.props.users.profile_pic || user_default}
-              height="50px"
-              width="50px"
-              alt="contact"
-            />
+          <img
+            className="rounded-circle"
+            src={profile_pic || group_pic || default_pic}
+            height="50px"
+            width="50px"
+            alt="contact"
+          />
         </div>
         <div className="d-flex align-items-center w-100 ml-3 top-border">
-          <span>{this.props.users.username}</span>
+          <span>{username || groupName}</span>
         </div>
-        <div className="container-drop align-items-center" ref={this.container}>
+        <div
+          className="container-drop align-items-center"
+          tabIndex="1"
+          onBlur={this.hideDropdown}
+        >
           <img
             type="button"
             src="https://img.icons8.com/android/24/000000/expand-arrow.png"
@@ -64,16 +71,27 @@ class Contact extends Component {
             className="down-arrow mr-3"
             onClick={this.handleButtonClick}
           />
-          {this.state.contactArrowOpen && (
-            <div className="dropdown-contact">
-              <ul>
-                <li>Archive chat</li>
-                <li>Mute notification</li>
-                <li>Delete Chat</li>
-                <li>Mark as unread</li>
-              </ul>
-            </div>
-          )}
+          {this.state.showDropdown &&
+            (user ? (
+              <div className="dropdown-contact">
+                <ul>
+                  <li>Archive chat</li>
+                  <li>Mute notification</li>
+                  <li>Delete Chat</li>
+                  <li>Mark as unread</li>
+                </ul>
+              </div>
+            ) : (
+              <div className="dropdown-contact">
+                <ul>
+                  <li>Archive chat</li>
+                  <li>Mute notification</li>
+                  <li>Exit group</li>
+                  <li>Pin chat</li>
+                  <li>Mark as unread</li>
+                </ul>
+              </div>
+            ))}
         </div>
       </div>
     );

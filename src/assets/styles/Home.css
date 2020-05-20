@@ -11,17 +11,13 @@
   font-size: 2rem;
 }
 
-.row {
+.container-row {
   background: #fff;
-  padding: 24px;
   height: 550px;
-  text-align: center;
-  display: flex;
-  align-items: center;
+  width: 100vw;
 }
 
 .footer {
-  text-align: end;
   font-size: 1.1rem;
 }
 
@@ -55,8 +51,8 @@
 }
 
 .main-logo {
-  width: 400px;
-  height: auto;
+  width: 100%;
+  height: 100%;
 }
 
 .navbar-nav li {
@@ -64,10 +60,6 @@
 }
 
 @media all and (max-width: 1200px) {
-  .main-logo {
-    width: 350px;
-  }
-
   .title-english {
     font-size: 2.4rem;
   }
