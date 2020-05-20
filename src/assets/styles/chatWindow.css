@@ -15,7 +15,7 @@
 }
 
 .message-area {
-  height: 82%;
+  height: 83%;
   overflow-y: scroll;
   background-image: url("../images/chat-background.jpg");
   background-repeat: repeat;
@@ -41,6 +41,7 @@
 }
 .message-box {
   width: 87%;
+  margin-bottom: 0;
 }
 .footer-icon:focus {
   outline: none;

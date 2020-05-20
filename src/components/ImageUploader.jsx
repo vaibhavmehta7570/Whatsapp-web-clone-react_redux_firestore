@@ -5,7 +5,7 @@ function ImageUploader({ textContent, changePic, imageSrc }) {
   return (
     <div className="profile-pic-container">
       <div className="pic-container">
-        <div className="fake-hover-div rounded-circle flex-column align-items-center justify-content-center">
+        <div className="fake-hover-div rounded-circle flex-column align-items-center justify-content-center text-center">
           <img src={cameraIcon} alt="camera icon" width="25px" />
           <p className="text-white w-50 mt-3">{textContent}</p>
         </div>

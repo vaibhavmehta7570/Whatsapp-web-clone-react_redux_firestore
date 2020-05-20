@@ -18,7 +18,6 @@ import "../assets/styles/contactInfo.css";
 import Modal from "./groups/Modal";
 import ImageUploader from "./ImageUploader";
 
-<!-- <<<<<<< feature/group/new -->
 class ContactInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -33,36 +32,15 @@ class ContactInfo extends React.Component {
       editGroupDescription: "",
     };
   }
-// =======
-// const ContactInfo = ({
-//   user,
-//   group,
-//   hideContactInfo,
-//   currentUser,
-//   hideGroupChatWindow,
-//   openGroupChatWindow,
-// }) => {
-//   const { username, email, description: bio, profile_pic } = user || {};
-//   const {
-//     groupName,
-//     description,
-//     group_pic,
-//     admins,
-//     members,
-//     membersIdArray,
-//     createdAt,
-//     group_id,
-//   } = group || {};
-// >>>>>>> feature/Groups
 
-  changeProfilePic = (event) => {
-    let imageName = event.target.files[0].name;
+  changeProfilePic = event => {
+    let imageName = event.target.files[0]?.name;
     this.setState({ groupImage: event.target.files[0] }, () => {
       this.uploadProfilePicToStorage(imageName);
     });
   };
 
-  uploadProfilePicToStorage = async (image_name) => {
+  uploadProfilePicToStorage = async image_name => {
     var storageRef = storage.ref();
     var imageLoc = storageRef.child(
       `groupProfileImages/${this.props.group.group_id}/${image_name}`
@@ -93,7 +71,7 @@ class ContactInfo extends React.Component {
   exitGroup = (members, admins, group_id) => {
     const currentUser = this.props.currentUser;
     const newMembers = members.filter(
-      (member) => member.user_id !== currentUser.user_id
+      member => member.user_id !== currentUser.user_id
     );
     if (admins.includes(currentUser.user_id)) {
       if (admins.length === 1) {
@@ -164,13 +142,12 @@ class ContactInfo extends React.Component {
       });
     this.setState({ editGroupDescription: false });
   };
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
   toggleModal = () => {
     this.setState({ showModal: !this.state.showModal });
-    // setShowModal(!showModal);
   };
 
   render() {
@@ -194,7 +171,6 @@ class ContactInfo extends React.Component {
         minute: "2-digit",
       })
       .toLocaleUpperCase();
-    // console.log(group_pic);
 
     return (
       <>
@@ -219,13 +195,15 @@ class ContactInfo extends React.Component {
                       imageSrc={group_pic || groupIcon}
                     />
                   ) : (
-                    <img
-                      className="rounded-circle m-4"
-                      src={profile_pic || userIcon}
-                      alt="profile pic of contact"
-                      width="200px"
-                      height="200px"
-                    />
+                    <div className=" d-flex justify-content-center py-4">
+                      <img
+                        className="rounded-circle"
+                        src={profile_pic || userIcon}
+                        alt="profile pic of contact"
+                        width="200px"
+                        height="200px"
+                      />
+                    </div>
                   )}
                 </div>
                 {user ? (
@@ -333,40 +311,15 @@ class ContactInfo extends React.Component {
                     alt="click to see media, links and docs"
                   />
                 </div>
-                <div className="media-content py-4">
+                <div className="media-content p-4">
                   No media, Links and Docs
                 </div>
               </div>
-<!-- <<<<<<< feature/group/new -->
               <div className="bg-white pl-4 mb-2 text-left">
                 <div className="py-3 d-flex justify-content-between align-items-center">
                   <span>Mute Notification</span>
                   <input className="mr-4" type="checkbox" />
                 </div>
-<!-- =======
-            )}
-            <div className="bg-white py-3 mb-2">
-              <div className="text-left green-text px-4 d-flex justify-content-between">
-                <span>Media, Links and Docs</span>
-                <img src={arrowIcon} alt="click to see media, links and docs" />
-              </div>
-              <div className="media-content p-4">No media, Links and Docs</div>
-            </div>
-            <div className="bg-white pl-4 mb-2 text-left">
-              <div className="py-3 d-flex justify-content-between align-items-center">
-                <span>Mute Notification</span>
-                <input className="mr-4" type="checkbox" />
-              </div>
-              <div className="py-3 d-flex justify-content-between top-border">
-                <span>Starred Messages</span>
-                <img
-                  className="mr-4"
-                  src={arrowIcon}
-                  alt="click to see starred messages"
-<!--                 /> -->
-              </div>
-               {group && (
-// >>>>>>> feature/Groups -->
                 <div className="py-3 d-flex justify-content-between top-border">
                   <span>Starred Messages</span>
                   <img
@@ -440,7 +393,7 @@ class ContactInfo extends React.Component {
                     </>
                   )}
 
-                  {members.map((member) => {
+                  {members.map(member => {
                     const admin = admins.includes(member.user_id)
                       ? true
                       : false;
@@ -458,7 +411,7 @@ class ContactInfo extends React.Component {
               {group && (
                 <div
                   className="bg-white pl-4 mb-2 text-left text-danger pointer"
-                  onClick={() => this.exitGroup}
+                  onClick={() => this.exitGroup(members, admins, group_id)}
                 >
                   <div className="py-3">
                     <img className="mr-4" src={exitIcon} alt="delete contact" />

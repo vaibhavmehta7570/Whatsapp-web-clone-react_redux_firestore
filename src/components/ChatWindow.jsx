@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import "../assets/styles/chatWindow.css";
 import ReceiverCard from "./ReceiverCards";
 import SenderCard from "./SenderCard";
-// import { onSendMessage } from "../actions/actionOnChatWindow";
 import avtarImag from "../assets/images/users.svg";
 
 class ChatWindow extends Component {
@@ -41,7 +40,7 @@ class ChatWindow extends Component {
     this.scrollToBottom();
   }
 
-  handleOnchange = (e) => {
+  handleOnchange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
@@ -49,7 +48,7 @@ class ChatWindow extends Component {
     this.setState({ message_body: "" });
   };
 
-  sendMessage = (event) => {
+  sendMessage = event => {
     event.preventDefault();
     if (this.state.message_body.trim().length > 0) {
       const {
@@ -68,7 +67,6 @@ class ChatWindow extends Component {
           recipient_email,
           timestamp: new Date().getTime(),
         };
-        console.log(this.props.userDetails);
         const messageDocRef = this.props.newChatDocRef.doc();
 
         messageDocRef.set({
@@ -79,7 +77,6 @@ class ChatWindow extends Component {
         console.log(error.message);
       }
     }
-    // this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
     this.chageInputValueAfterSend();
   };
 
@@ -132,7 +129,7 @@ class ChatWindow extends Component {
           </nav>
         </div>
         <div className="message-area pb-3">
-          {this.props.message.map((message) =>
+          {this.props.message.map(message =>
             message !== undefined &&
             message.sender_id !== this.state.sender_id ? (
               <ReceiverCard key={message.message_id} message={message} />
@@ -143,7 +140,7 @@ class ChatWindow extends Component {
           <div
             className="auto-scroll"
             style={{ float: "left", clear: "both" }}
-            ref={(el) => {
+            ref={el => {
               this.messagesEnd = el;
             }}
           ></div>
@@ -188,7 +185,7 @@ class ChatWindow extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     message: state.chats.message,
   };

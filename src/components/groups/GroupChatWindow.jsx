@@ -36,8 +36,9 @@ class ChatWindow extends Component {
     const {
       currentUser,
       showGroup,
-      group: { group_pic, groupName } = {},
+      group,
     } = this.props;
+    const { group_pic, groupName } = group || {}
     const { message_body } = this.state;
 
     return (
