@@ -15,7 +15,6 @@ import NotificationSwitch from "./NotificationSwitch";
 import CreateNewGroup from "./groups/CreateNewGroup";
 import { getGroupAdmin } from "../actions/createGroupAction";
 import { getAllGroups } from "../actions/groupsActions";
-import GroupCard from "./groups/GroupCard";
 import GroupChatWindow from "./groups/GroupChatWindow";
 import {
   getAllGroupMessages,
@@ -49,7 +48,7 @@ class Chat extends Component {
   }
 
   handleButtonClick = () => {
-    this.setState(state => {
+    this.setState((state) => {
       return {
         open: !state.open,
       };
@@ -108,9 +107,9 @@ class Chat extends Component {
     let newDocAdded = false;
     // return a function that can later be called to unsubscribe
     return chatDocRef.orderBy("timestamp").onSnapshot(
-      snapshot => {
+      (snapshot) => {
         if (newDocAdded) {
-          snapshot.docChanges().forEach(change => {
+          snapshot.docChanges().forEach((change) => {
             if (change.type === "added") {
               if (userOnActiveChat) {
                 this.props.addNewMessage(change.doc.data());
@@ -126,7 +125,7 @@ class Chat extends Component {
         }
         newDocAdded = true;
       },
-      err => {
+      (err) => {
         console.error("Looks like an error: ", err);
       }
     );
@@ -136,7 +135,7 @@ class Chat extends Component {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
-  handleClickOutside = event => {
+  handleClickOutside = (event) => {
     if (
       this.container.current &&
       !this.container.current.contains(event.target)
@@ -148,17 +147,17 @@ class Chat extends Component {
   };
 
   checkAuthenticationState = () => {
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged((user) => {
       if (user) {
         db.collection("users")
           .doc(user.uid)
           .onSnapshot(
-            user => {
+            (user) => {
               this.props.getCurrentUser(user.data());
               this.getAllUsers();
               this.getGroupsOfCurrentUser(user.data());
             },
-            err => console.error(`Looks like an error => ${err.message}`)
+            (err) => console.error(`Looks like an error => ${err.message}`)
           );
       } else {
         console.log("User is not logged in");
@@ -169,9 +168,9 @@ class Chat extends Component {
 
   getAllUsers = () => {
     db.collection("users").onSnapshot(
-      snapshot => {
+      (snapshot) => {
         const users = [];
-        snapshot.forEach(doc => {
+        snapshot.forEach((doc) => {
           const data = doc.data();
           if (data.user_id !== this.props.currentUser.user_id) {
             users.push(data);
@@ -179,30 +178,30 @@ class Chat extends Component {
         });
         this.props.getUsers(users);
       },
-      error => console.log("Looks like an error: ", error)
+      (error) => console.log("Looks like an error: ", error)
     );
   };
 
-  getGroupsOfCurrentUser = user => {
+  getGroupsOfCurrentUser = (user) => {
     db.collection("groups")
       .where("membersIdArray", "array-contains", user.user_id)
       .onSnapshot(
-        snapshot => {
+        (snapshot) => {
           const groups = [];
-          snapshot.forEach(doc => {
+          snapshot.forEach((doc) => {
             groups.push(doc.data());
           });
           this.props.getAllGroups(groups);
         },
-        err => console.error("Looks like an error: ", err)
+        (err) => console.error("Looks like an error: ", err)
       );
   };
 
   // Search functionality in search contacts
-  handleOnInputChange = event => {
+  handleOnInputChange = (event) => {
     this.setState({ searchString: event.target.value }, () => {
       this.setState((state, props) => ({
-        searchedUsers: props.users.filter(user =>
+        searchedUsers: props.users.filter((user) =>
           user.username
             .toLowerCase()
             .includes(this.state.searchString.toLowerCase())
@@ -215,7 +214,7 @@ class Chat extends Component {
     this.setState({ showArrow: true });
   };
 
-  exitFromSearchBar = e => {
+  exitFromSearchBar = (e) => {
     e.stopPropagation();
     this.setState({ showArrow: false, searchString: "", searchedUsers: null });
   };
@@ -226,12 +225,12 @@ class Chat extends Component {
       .then(() => {
         console.log("Sign Out successful");
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("Sign Out failed", err);
       });
   };
 
-  openChatRoom = user => {
+  openChatRoom = (user) => {
     const chatID = this.createUniqueChatID(this.props.currentUser, user);
     const newChat = db.collection("chats").doc(chatID).collection("messages");
     if (this.state.unsubscribeUserDoc) {
@@ -302,7 +301,7 @@ class Chat extends Component {
     });
   };
 
-  activeContact = user => {
+  activeContact = (user) => {
     return this.state.userToChatWith?.user_id === user.user_id ? "active" : "";
   };
 
@@ -319,7 +318,7 @@ class Chat extends Component {
   };
 
   handleNotificationPermission = () => {
-    Notification.requestPermission().then(permission => {
+    Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
         this.setState({ notificationAlert: false });
         console.log("You have allowed desktop notifications");
@@ -330,11 +329,11 @@ class Chat extends Component {
     });
   };
 
-  updateGroupCreationProgress = progress => {
+  updateGroupCreationProgress = (progress) => {
     this.setState({ groupCreationProgressText: progress });
   };
 
-  openGroupChatWindow = group => {
+  openGroupChatWindow = (group) => {
     this.props.getAllGroupMessages(group);
 
     if (this.state.unsubscribeGroupDoc) {
@@ -494,7 +493,7 @@ class Chat extends Component {
                   <div className="user-list-container">
                     <div className="user_list">
                       {this.state.searchedUsers
-                        ? this.state.searchedUsers.map(user => {
+                        ? this.state.searchedUsers.map((user) => {
                             const activeContact = this.activeContact(user);
                             return (
                               <Contact
@@ -505,7 +504,7 @@ class Chat extends Component {
                               />
                             );
                           })
-                        : this.props.users.map(user => {
+                        : this.props.users.map((user) => {
                             const activeContact = this.activeContact(user);
                             return (
                               <Contact
@@ -574,7 +573,7 @@ class Chat extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     users: state.users,
     currentUser: state.currentUser,
@@ -583,16 +582,16 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getUsers: data => dispatch(getUsers(data)),
-    getCurrentUser: data => dispatch(getCurrentUser(data)),
-    getAllMessages: docRef => dispatch(getAllMessages(docRef)),
-    addNewMessage: message => dispatch(addNewMessage(message)),
-    getGroupAdmin: admin => dispatch(getGroupAdmin(admin)),
-    getAllGroups: groups => dispatch(getAllGroups(groups)),
-    getAllGroupMessages: group => dispatch(getAllGroupMessages(group)),
-    addNewGroupMessage: message => dispatch(addNewGroupMessage(message)),
+    getUsers: (data) => dispatch(getUsers(data)),
+    getCurrentUser: (data) => dispatch(getCurrentUser(data)),
+    getAllMessages: (docRef) => dispatch(getAllMessages(docRef)),
+    addNewMessage: (message) => dispatch(addNewMessage(message)),
+    getGroupAdmin: (admin) => dispatch(getGroupAdmin(admin)),
+    getAllGroups: (groups) => dispatch(getAllGroups(groups)),
+    getAllGroupMessages: (group) => dispatch(getAllGroupMessages(group)),
+    addNewGroupMessage: (message) => dispatch(addNewGroupMessage(message)),
   };
 };
 
