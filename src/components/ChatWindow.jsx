@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import "../assets/styles/chatWindow.css";
 import ReceiverCard from "./ReceiverCards";
 import SenderCard from "./SenderCard";
-import { onSendMessage } from "../actions/actionOnChatWindow";
 import avtarImag from "../assets/images/users.svg";
 
 class ChatWindow extends Component {
@@ -41,7 +40,7 @@ class ChatWindow extends Component {
     this.scrollToBottom();
   }
 
-  handleOnchange = (e) => {
+  handleOnchange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
@@ -49,19 +48,35 @@ class ChatWindow extends Component {
     this.setState({ message_body: "" });
   };
 
-  sendMessage = (event) => {
+  sendMessage = event => {
     event.preventDefault();
     if (this.state.message_body.trim().length > 0) {
-      this.props.onSendMessage(
-        this.state.message_body,
-        this.state.sender_id,
-        this.state.email,
-        this.state.username,
-        this.props.newChatDocRef,
-        this.props.userDetails
-      );
+      const {
+        user_id: recipient_id,
+        username: recipient_name,
+        email: recipient_email,
+      } = this.props.userDetails;
+      try {
+        const message = {
+          message_body: this.state.message_body,
+          sender_id: this.state.sender_id,
+          sender_name: this.state.username,
+          sender_email: this.state.email,
+          recipient_id,
+          recipient_name,
+          recipient_email,
+          timestamp: new Date().getTime(),
+        };
+        const messageDocRef = this.props.newChatDocRef.doc();
+
+        messageDocRef.set({
+          ...message,
+          message_id: messageDocRef.id,
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
     }
-    // this.props.fetchMessages(this.props.message, this.props.newChatDocRef);
     this.chageInputValueAfterSend();
   };
 
@@ -114,24 +129,18 @@ class ChatWindow extends Component {
           </nav>
         </div>
         <div className="message-area pb-3">
-          {this.props.message.map((message) =>
+          {this.props.message.map(message =>
             message !== undefined &&
             message.sender_id !== this.state.sender_id ? (
-              <ReceiverCard
-                key={message.message_id}
-                message={message}
-              />
+              <ReceiverCard key={message.message_id} message={message} />
             ) : (
-              <SenderCard
-                key={message.message_id}
-                message={message}
-              />
+              <SenderCard key={message.message_id} message={message} />
             )
           )}
           <div
             className="auto-scroll"
             style={{ float: "left", clear: "both" }}
-            ref={(el) => {
+            ref={el => {
               this.messagesEnd = el;
             }}
           ></div>
@@ -176,10 +185,10 @@ class ChatWindow extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     message: state.chats.message,
   };
 };
 
-export default connect(mapStateToProps, { onSendMessage })(ChatWindow);
+export default connect(mapStateToProps)(ChatWindow);
