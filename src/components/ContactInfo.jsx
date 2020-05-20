@@ -22,6 +22,7 @@ const ContactInfo = ({
   hideContactInfo,
   currentUser,
   hideGroupChatWindow,
+  openGroupChatWindow,
 }) => {
   const { username, email, description: bio, profile_pic } = user || {};
   const {
@@ -142,7 +143,7 @@ const ContactInfo = ({
                 <span>Media, Links and Docs</span>
                 <img src={arrowIcon} alt="click to see media, links and docs" />
               </div>
-              <div className="media-content py-4">No media, Links and Docs</div>
+              <div className="media-content p-4">No media, Links and Docs</div>
             </div>
             <div className="bg-white pl-4 mb-2 text-left">
               <div className="py-3 d-flex justify-content-between align-items-center">
@@ -262,7 +263,6 @@ const ContactInfo = ({
           exitModal={toggleModal}
           membersIdArray={membersIdArray}
           group_id={group_id}
-          hideWindow={hideGroupChatWindow}
         />
       )}
     </>

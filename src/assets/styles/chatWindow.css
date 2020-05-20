@@ -15,7 +15,7 @@
 }
 
 .message-area {
-  height: 81%;
+  height: 82%;
   overflow-y: scroll;
   background-image: url("../images/chat-background.jpg");
   background-repeat: repeat;
