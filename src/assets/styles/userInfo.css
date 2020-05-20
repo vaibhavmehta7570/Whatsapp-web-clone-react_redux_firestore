@@ -111,3 +111,6 @@
   display: flex;
   padding-top: 35px;
 }
+.group-dp {
+  position: relative;
+}
