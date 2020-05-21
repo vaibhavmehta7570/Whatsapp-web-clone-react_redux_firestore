@@ -116,10 +116,38 @@ class Chat extends Component {
                 this.props.addNewMessage(change.doc.data());
                 const { sender_id } = change.doc.data();
                 if (sender_id === userOnActiveChat.user_id) {
-                  this.sendNotification(change.doc.data());
+                  const {
+                    sender_name: title,
+                    message_body: body,
+                  } = change.doc.data();
+
+                  this.sendNotification(title, body);
                 }
               } else {
                 this.props.addNewGroupMessage(change.doc.data());
+                const {
+                  group_id,
+                  groupName: title,
+                  message_body,
+                  sender_name,
+                  sender_id,
+                } = change.doc.data();
+
+                db.collection("groups")
+                  .doc(group_id)
+                  .get()
+                  .then(doc => {
+                    const groupMembers = doc
+                      .data()
+                      .membersIdArray.filter(
+                        memberId => memberId !== sender_id
+                      );
+                      
+                    if (groupMembers.includes(this.props.currentUser.user_id)) {
+                      const body = `${sender_name}: ${message_body}`
+                      this.sendNotification(title, body)
+                    }
+                  });
               }
             }
           });
@@ -153,10 +181,14 @@ class Chat extends Component {
         db.collection("users")
           .doc(user.uid)
           .onSnapshot(
-            user => {
-              this.props.getCurrentUser(user.data());
-              this.getAllUsers();
-              this.getGroupsOfCurrentUser(user.data());
+            userDoc => {
+              if (userDoc.data()) {
+                this.props.getCurrentUser(userDoc.data());
+                this.getAllUsers();
+                this.getGroupsOfCurrentUser(userDoc.data());
+              } else {
+                console.log("Unable to get current user data");
+              }
             },
             err => console.error(`Looks like an error => ${err.message}`)
           );
@@ -246,16 +278,19 @@ class Chat extends Component {
       unsubscribeUserDoc: db
         .collection("users")
         .doc(user.user_id)
-        .onSnapshot(snapshot => {
-          const userToChatWith = snapshot.data();
-          this.setState({
-            userToChatWith,
-            showChatRoom: true,
-            newChatDocRef: newChat,
-            showGroupChatWindow: false,
-            currentGroup: null,
-          });
-        }, err => console.error("Looks like an error: ", err)),
+        .onSnapshot(
+          snapshot => {
+            const userToChatWith = snapshot.data();
+            this.setState({
+              userToChatWith,
+              showChatRoom: true,
+              newChatDocRef: newChat,
+              showGroupChatWindow: false,
+              currentGroup: null,
+            });
+          },
+          err => console.error("Looks like an error: ", err)
+        ),
     });
     this.props.getAllMessages(newChat);
   };
@@ -315,7 +350,7 @@ class Chat extends Component {
     return this.state.currentGroup?.group_id === group.group_id ? "active" : "";
   };
 
-  sendNotification = ({ sender_name: title, message_body: body }) => {
+  sendNotification = (title, body) => {
     if ("Notification" in window && Notification.permission === "granted") {
       const options = {
         body,
@@ -353,12 +388,15 @@ class Chat extends Component {
       unsubscribeGroupDoc: db
         .collection("groups")
         .doc(group.group_id)
-        .onSnapshot(snapshot => {
-          const currentGroup = snapshot.data();
-          this.setState({
-            currentGroup,
-          });
-        }, err => console.error("Look like an error: ", err)),
+        .onSnapshot(
+          snapshot => {
+            const currentGroup = snapshot.data();
+            this.setState({
+              currentGroup,
+            });
+          },
+          err => console.error("Look like an error: ", err)
+        ),
       userToChatWith: null,
       showGroupChatWindow: true,
       showChatRoom: false,
@@ -528,22 +566,26 @@ class Chat extends Component {
                       {this.state.searchedGroups
                         ? this.state.searchedGroups.map(group => {
                             const activeGroup = this.activeGroup(group);
-                            return <Contact
-                              key={group.group_id}
-                              group={group}
-                              openChatWindow={this.openGroupChatWindow}
-                              active={activeGroup}
+                            return (
+                              <Contact
+                                key={group.group_id}
+                                group={group}
+                                openChatWindow={this.openGroupChatWindow}
+                                active={activeGroup}
                               />
-                        })
+                            );
+                          })
                         : this.props.groups.map(group => {
                             const activeGroup = this.activeGroup(group);
-                            return <Contact
-                              key={group.group_id}
-                              group={group}
-                              openChatWindow={this.openGroupChatWindow}
-                              active={activeGroup}
+                            return (
+                              <Contact
+                                key={group.group_id}
+                                group={group}
+                                openChatWindow={this.openGroupChatWindow}
+                                active={activeGroup}
                               />
-                        })}
+                            );
+                          })}
                     </div>
                   </div>
                 </div>

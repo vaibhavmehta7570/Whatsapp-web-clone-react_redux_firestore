@@ -33,6 +33,10 @@ class ContactInfo extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.setState({groupName: this.props.group.groupName})
+  }
+
   changeProfilePic = event => {
     let imageName = event.target.files[0]?.name;
     this.setState({ groupImage: event.target.files[0] }, () => {
@@ -252,7 +256,7 @@ class ContactInfo extends React.Component {
                           <input
                             type="text"
                             name="groupName"
-                            value={this.state.groupName || groupName}
+                            value={this.state.groupName}
                             className="form-control input-name"
                             onChange={this.handleInputChange}
                           />

@@ -19,6 +19,8 @@ class App extends Component {
     auth.onAuthStateChanged((user) => {
       this.props.userLoggedIn(user);
       this.setState({ authenticationComplete: true });
+    }, err => {
+      console.error("Looks like an error: ", err)
     });
   }
 
