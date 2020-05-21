@@ -179,7 +179,7 @@ class Chat extends Component {
         });
         this.props.getUsers(users);
       },
-      error => console.log("Looks like an error: ", error)
+      error => console.error("Looks like an error: ", error)
     );
   };
 
@@ -232,7 +232,7 @@ class Chat extends Component {
         console.log("Sign Out successful");
       })
       .catch(err => {
-        console.log("Sign Out failed", err);
+        console.error("Sign Out failed", err);
       });
   };
 
@@ -255,7 +255,7 @@ class Chat extends Component {
             showGroupChatWindow: false,
             currentGroup: null,
           });
-        }),
+        }, err => console.error("Looks like an error: ", err)),
     });
     this.props.getAllMessages(newChat);
   };
@@ -358,7 +358,7 @@ class Chat extends Component {
           this.setState({
             currentGroup,
           });
-        }),
+        }, err => console.error("Look like an error: ", err)),
       userToChatWith: null,
       showGroupChatWindow: true,
       showChatRoom: false,
