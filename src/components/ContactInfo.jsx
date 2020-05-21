@@ -75,9 +75,41 @@ class ContactInfo extends React.Component {
     );
     if (admins.includes(currentUser.user_id)) {
       if (admins.length === 1) {
-        console.log("Only one admin! Sorry can't exit");
+        const docRef = db.collection("groups").doc(group_id);
+
+        docRef
+          .update({
+            admins: firebase.firestore.FieldValue.arrayRemove(
+              currentUser.user_id
+            ),
+            members: newMembers,
+            membersIdArray: firebase.firestore.FieldValue.arrayRemove(
+              currentUser.user_id
+            ),
+          })
+          .then(() => {
+            docRef
+              .get()
+              .then(doc => {
+                if (doc.data().membersIdArray.length > 0) {
+                  docRef
+                    .update({
+                      admins: firebase.firestore.FieldValue.arrayUnion(
+                        doc.data().membersIdArray[0]
+                      ),
+                    })
+                    .then(() => console.log("Successfully assigned new admin"))
+                    .catch(err => console.error("Error assigning new admin: ", err));
+                } else {
+                  console.log("Looks like there are no members in the group")
+                }
+              })
+              .catch(err => console.error("Error assigning new admin: ", err));
+          })
+          .catch(err => console.error("Error exiting group: ", err));
+
+        this.props.hideGroupChatWindow();
       } else if (admins.length >= 1) {
-        console.log("More than one admins! Can exit");
         db.collection("groups")
           .doc(group_id)
           .update({
@@ -88,14 +120,15 @@ class ContactInfo extends React.Component {
             membersIdArray: firebase.firestore.FieldValue.arrayRemove(
               currentUser.user_id
             ),
-          });
+          })
+          .catch(err => console.error("Error exiting group: ", err));
+
         this.props.hideGroupChatWindow();
       } else {
         // ? Zero or less admins *** will never reach this block
         console.log("No Admins! Something is wrong");
       }
     } else {
-      console.log("Not an admin! Can Exit");
       db.collection("groups")
         .doc(group_id)
         .update({
@@ -103,7 +136,9 @@ class ContactInfo extends React.Component {
           membersIdArray: firebase.firestore.FieldValue.arrayRemove(
             currentUser.user_id
           ),
-        });
+        })
+        .catch(err => console.error("Error exiting group: ", err));
+        
       this.props.hideGroupChatWindow();
     }
   };
@@ -151,8 +186,7 @@ class ContactInfo extends React.Component {
   };
 
   render() {
-    const user = this.props.user;
-    const group = this.props.group;
+    const { user, group, currentUser } = this.props;
     const { username, email, description: bio, profile_pic } = user || {};
     const {
       groupName,
@@ -365,7 +399,7 @@ class ContactInfo extends React.Component {
                     <span>{members.length} participants</span>
                     <img src={searchIcon} alt="group description" />
                   </div>
-                  {admins.includes(this.props.currentUser.user_id) && (
+                  {admins.includes(currentUser.user_id) && (
                     <>
                       <div
                         className="add-member-options"
@@ -394,15 +428,20 @@ class ContactInfo extends React.Component {
                   )}
 
                   {members.map(member => {
-                    const admin = admins.includes(member.user_id)
+                    const memberIsAdmin = admins.includes(member.user_id)
                       ? true
                       : false;
+                    const isCurrentUserAdmin = admins.includes(
+                      currentUser.user_id
+                    );
                     return (
                       <GroupMember
                         key={member.user_id}
                         user={member}
-                        currentUser={this.props.currentUser}
-                        admin={admin}
+                        currentUser={currentUser}
+                        isAdmin={memberIsAdmin}
+                        isCurrentUserAdmin={isCurrentUserAdmin}
+                        group_id={group_id}
                       />
                     );
                   })}

@@ -52,6 +52,18 @@
   color: #07BC4C;
 }
 
+.dropdown-member {
+  position: absolute;
+  top: 55%;
+  right: 15px;
+  width: 200px;
+  z-index: 2;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
+  background-color: white;
+  font-size: 14px;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }

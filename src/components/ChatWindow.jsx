@@ -74,7 +74,7 @@ class ChatWindow extends Component {
           message_id: messageDocRef.id,
         });
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
     }
     this.chageInputValueAfterSend();
