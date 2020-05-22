@@ -33,10 +33,6 @@ class ContactInfo extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.setState({groupName: this.props.group.groupName})
-  }
-
   changeProfilePic = event => {
     let imageName = event.target.files[0]?.name;
     this.setState({ groupImage: event.target.files[0] }, () => {
@@ -400,10 +396,10 @@ class ContactInfo extends React.Component {
               ) : (
                 <div className="bg-white mb-2">
                   <div className="text-left green-text px-4 py-2 my-1 d-flex align-items-center justify-content-between">
-                    <span>{members.length} participants</span>
+                    <span>{members && members.length} participants</span>
                     <img src={searchIcon} alt="group description" />
                   </div>
-                  {admins.includes(currentUser.user_id) && (
+                  {admins && admins.includes(currentUser.user_id) && (
                     <>
                       <div
                         className="add-member-options"
@@ -431,7 +427,7 @@ class ContactInfo extends React.Component {
                     </>
                   )}
 
-                  {members.map(member => {
+                  {members && members.map(member => {
                     const memberIsAdmin = admins.includes(member.user_id)
                       ? true
                       : false;
