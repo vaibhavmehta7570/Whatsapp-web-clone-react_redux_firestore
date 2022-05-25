@@ -1,0 +1,157 @@
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap");
+
+.container-fluid {
+  height: 100%;
+  scrollbar-color: rgba(0, 0, 0, 0.2) hsla(0, 0%, 100%, 0.1);
+  scrollbar-width: thin;
+}
+.sidebar {
+  background-color: #ededed;
+  border: 1px solid #f1e3cb;
+  height: 100%;
+}
+.users {
+  background-color: white;
+  height: 70px;
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+.users:hover {
+  background-color: #f5f5f5;
+}
+.users.active {
+  background-color: #ececec;
+}
+
+.search-icon {
+  height: 20px;
+}
+.search-bar {
+  background-color: #f7f7f7;
+  border: #f7f7f7 solid 10px;
+}
+.logout-button {
+  border-radius: 100px;
+}
+.search {
+  width: 80%;
+  height: 100%;
+  border: none;
+}
+.search:focus {
+  outline: none;
+}
+.initial-text {
+  margin-left: 550px;
+  margin-top: 200px;
+}
+h1,
+h3 {
+  text-align: center;
+  font-family: "Kaushan Script", cursive;
+}
+
+.welcome-image {
+  min-height: 280px;
+  width: 300px;
+  background-image: url("https://web.whatsapp.com/img/intro-connection_c98cc75f2aa905314d74375a975d2cf2.jpg");
+  background-repeat: no-repeat;
+  background-size: 250px 250px;
+  margin-top: 110px;
+}
+.before-chat {
+  height: 100%;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.before-chat p {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+  line-height: 20px;
+}
+.user_list {
+  max-height: 100%;
+  overflow-y: scroll;
+  padding-bottom: 161px;
+}
+.user-icons {
+  display: flex;
+  justify-content: space-evenly;
+  color: #919191;
+}
+
+.search-box {
+  display: flex;
+  text-align: left;
+  border-radius: 18px;
+  height: 36px;
+  background-color: #fff;
+  z-index: 100;
+}
+.container {
+  position: relative;
+  display: inline-block;
+}
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: -100px;
+  width: 150px;
+  z-index: 2;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
+  background-color: white;
+}
+.dropdown-contact {
+  position: absolute;
+  top: 50%;
+  left: -130px;
+  width: 150px;
+  z-index: 2;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
+  background-color: white;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  padding: 8px 12px;
+  text-align: left;
+  color: black;
+}
+li:hover {
+  background-color: rgba(0, 0, 0, 0.14);
+  cursor: pointer;
+}
+.down-arrow {
+  height: 15px;
+}
+.contact-list {
+  float: left;
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+}
+.container-drop {
+  position: relative;
+  display: none;
+}
+.container-contact:hover .container-drop {
+  display: inline-block;
+}
+
+.user-detail {
+  height: 100%;
+}
+
+.user-list-container {
+  height: 83%;
+  overflow-y: auto;
+}

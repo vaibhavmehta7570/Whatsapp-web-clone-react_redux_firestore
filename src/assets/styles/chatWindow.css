@@ -1,0 +1,90 @@
+.chat-side-bar {
+  background-color: grey;
+  height: 100vh;
+}
+.chat-window {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 0px;
+  overflow-y: hidden;
+}
+
+.header-bar {
+  background-color: #ededed;
+}
+
+.message-area {
+  height: 81%;
+  overflow-y: scroll;
+  background-image: url("../images/chat-background.jpg");
+  background-repeat: repeat;
+  background-size: contain;
+  display: flex;
+  flex-direction: column;
+}
+.footer-bar {
+  height: 64px;
+  background-color: #f0f0f0;
+}
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 14px;
+  padding-bottom: 0;
+}
+.footer-icon {
+  font-size: 25px;
+  background-color: transparent;
+  border: none;
+  color: #919191;
+}
+.message-box {
+  width: 87%;
+}
+.footer-icon:focus {
+  outline: none;
+}
+.form-control {
+  border-radius: 20px;
+}
+.form-control:focus {
+  border: none;
+  border-color: transparent;
+  box-shadow: none !important;
+  outline: none;
+}
+.user-image {
+  border-radius: 20px;
+}
+.user-name {
+  font-size: 20px;
+  text-align: left;
+}
+.header-icon {
+  font-size: 22px;
+  background-color: transparent;
+  border: none;
+  color: #919191;
+}
+.header-icon:focus {
+  outline: none;
+}
+.auto-scroll {
+  float: "left";
+  clear: "both";
+}
+
+.relative {
+  position: relative;
+}
+
+.message-time {
+  top: 10px;
+}
+
+@media all and (max-width: 768px) {
+  .chat-window.col-sm-hide {
+    display: none;
+  }
+}

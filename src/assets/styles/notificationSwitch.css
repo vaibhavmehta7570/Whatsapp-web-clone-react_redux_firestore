@@ -1,0 +1,16 @@
+.notification-div {
+  width: 100%;
+  height: 90px;
+  background-color: #9de1fe;
+  font-size: 14px;
+}
+
+.notification-icon-container {
+  width: 45px;
+  height: 45px;
+  background-color: white;
+}
+
+.notification-div:hover .notification-link {
+  text-decoration: underline;
+}
